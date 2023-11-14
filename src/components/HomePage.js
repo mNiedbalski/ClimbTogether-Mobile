@@ -1,13 +1,13 @@
 import React from 'react';
-import { Container, Content, Text } from 'native-base';
+import { Container, Content, NativeBaseProvider, Text, Box } from 'native-base';
 
-const HomePage = () => {
+const HomePage = ({ navigation }) => {
     return (
-        <Container>
-            <Content>
-                <Text>Home Page</Text>
-            </Content>
-        </Container>
+        <NativeBaseProvider>
+            <Box>
+                <Text>Record Climbing</Text>
+            </Box>
+        </NativeBaseProvider>
     );
 };
 
