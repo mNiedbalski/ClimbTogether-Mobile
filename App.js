@@ -20,6 +20,7 @@ export default function App() {
           screenOptions={{
             tabBarStyle: styles.navigation,
             tabBarShowLabel: false,
+            headerShown: false,
           }
           }
         >
