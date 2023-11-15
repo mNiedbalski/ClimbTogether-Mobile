@@ -2,16 +2,14 @@
 import React, { Component } from 'react';
 import { Container, Content, Text, Box, NativeBaseProvider } from 'native-base';
 
-class Settings extends Component {
-  render() {
-    return (
+const Settings = ({ navigation }) => {
+  return (
       <NativeBaseProvider>
-        <Box>
-          <Text>Settings</Text>
-        </Box>
+          <Box>
+              <Text>Settings page</Text>
+          </Box>
       </NativeBaseProvider>
-    );
-  }
-}
+  );
+};
 
 export default Settings;

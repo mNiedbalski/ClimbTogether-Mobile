@@ -11,3 +11,5 @@ const RecordClimbing = ( { navigation } ) =>
       </NativeBaseProvider>
     );
 }
+
+export default RecordClimbing;

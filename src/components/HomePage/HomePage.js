@@ -5,7 +5,7 @@ const HomePage = ({ navigation }) => {
     return (
         <NativeBaseProvider>
             <Box>
-                <Text>Record Climbing</Text>
+                <Text>Home page</Text>
             </Box>
         </NativeBaseProvider>
     );
