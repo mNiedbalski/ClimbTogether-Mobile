@@ -1,4 +1,4 @@
-class Gym {
+export class Gym {
     id: number;
     address: string;
     name: string;

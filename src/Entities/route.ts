@@ -1,4 +1,4 @@
-class Route {
+export class Route {
   id: number;
   route_name: string;
   routesetter_id: number;

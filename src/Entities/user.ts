@@ -1,4 +1,6 @@
-class User {
+import {Attempt} from './attempt';
+import {Role} from './role';
+export class User {
   id: number;
   username: string;
   name: string;
@@ -7,8 +9,8 @@ class User {
   birthday: Date;
   height: number;
   weight: number;
-  role_id: number;
-  attempts_id: number;
+  roles: Role[];
+  attempts: Attempt[];
 
   constructor(
     id: number,
@@ -19,8 +21,8 @@ class User {
     birthday: Date,
     height: number,
     weight: number,
-    role_id: number,
-    attempts_id: number
+    roles: Role[],
+    attempts: Attempt[]
   ) {
     this.id = id;
     this.username = username;
@@ -30,9 +32,19 @@ class User {
     this.birthday = birthday;
     this.height = height;
     this.weight = weight;
-    this.role_id = role_id;
-    this.attempts_id = attempts_id;
+    this.roles = roles;
+    this.attempts = attempts;
   }
-
-  
+  countUserAttempts(): number {
+    return this.attempts.length;
+  }
+  countCompletedRoutes(): number {
+    let completedRoutes = 0;
+    this.attempts.forEach(function (attempt){
+      if (attempt.top_reached) {
+        completedRoutes++;
+      }
+    })
+    return completedRoutes;
+  }
 }

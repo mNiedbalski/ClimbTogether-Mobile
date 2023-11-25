@@ -1,4 +1,4 @@
-class Routesetter {
+export class Routesetter {
   id: number;
   user_id: number;
   routes_id: number;
