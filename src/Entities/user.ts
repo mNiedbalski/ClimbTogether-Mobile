@@ -1,5 +1,6 @@
 import {Attempt} from './attempt';
 import {Role} from './role';
+import {Achievement} from './achievement';
 export class User {
   id: number;
   username: string;
@@ -11,6 +12,9 @@ export class User {
   weight: number;
   roles: Role[];
   attempts: Attempt[];
+  experience_points: number;
+  level: number;
+  achievements: Achievement[];
 
   constructor(
     id: number,
@@ -22,7 +26,10 @@ export class User {
     height: number,
     weight: number,
     roles: Role[],
-    attempts: Attempt[]
+    attempts: Attempt[],
+    experience_points: number,
+    level: number,
+    achievements: Achievement[]
   ) {
     this.id = id;
     this.username = username;
@@ -34,6 +41,9 @@ export class User {
     this.weight = weight;
     this.roles = roles;
     this.attempts = attempts;
+    this.experience_points = experience_points;
+    this.level = level;
+    this.achievements = achievements;
   }
   countUserAttempts(): number {
     return this.attempts.length;
