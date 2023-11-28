@@ -34,6 +34,14 @@ const SelectRoute = ({ navigation }) => {
   let [routeSelected, setRouteSelected] = useState(false);
   let [roomSelected, setRoomSelected] = useState(false);
 
+  useEffect(() => {
+    return () => {
+      setRoomSelected(false);
+      setGymSelected(false);
+      console.log("Component unmounted. Resetting variables.");
+    };
+  }, []);
+
   const handleGymChange = (gym) => {
     setGym(gym);
     setGymSelected(true);
