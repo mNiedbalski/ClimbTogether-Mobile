@@ -13,8 +13,33 @@ import styles from './AppStyles.style';
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+import { Route } from './src/Entities/route';
+import { User } from './src/Entities/user';
+import { Attempt } from './src/Entities/attempt';
+import { Achievement } from './src/Entities/achievement';
+import { Role } from './src/Entities/role';
+import { Room } from './src/Entities/room';
+import { Gym } from './src/Entities/gym';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+//TODO: LOAD THIS DATA FROM DATABASE INSTEAD OF HARDCODING IT
+export const userRole = new Role(1, "user");
+export const adminRole = new Role(2, "admin");
+export const attempt1 = new Attempt(1, new Date('2023-11-25'), 15.5, true, false);
+export const attempt2 = new Attempt(2, new Date('2023-11-25'), 23.1, true, true);
+export const attempt3 = new Attempt(3, new Date('2023-11-25'), 13.5, true, true);
+export const testRoute1 = new Route(1, 'Test route', 1, 'V7', [attempt1, attempt2, attempt3], attempt3);
+export const testRoom = new Room(1, 'Main room', [testRoute1]);
+export const testGym = new Gym(1, 'Gabriela Narutowicza 51, 41-200 Sosnowiec', 'Poziom 450', [testRoom]);
+export const achievements1 = new Achievement(1, 'First route', 'Complete your first route!', new Date('2023-11-25'));
+export const loggedUser = new User(1, 'testUser', 'Michał', 'Niedbalski', 'male', new Date('2001-04-10'), 180, 75,
+  [userRole, adminRole],
+  [attempt1, attempt2, attempt3],
+  30,
+  1,
+  [achievements1]);
+
+//END OF TEST DATA
 export function NavigateToRouteRecording() {
   return (
     <Stack.Navigator
