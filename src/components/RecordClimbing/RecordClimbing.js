@@ -1,38 +1,58 @@
-import React from 'react';
-import { NativeBaseProvider, Box, Button, Column, Select } from 'native-base';
-import recordClimbingStyles from './RecordClimbing.style';
+import React, { useState } from 'react';
+import { Container, Content, Text, Box, NativeBaseProvider, Button } from 'native-base';
 
 const RecordClimbing = ({ navigation }) => {
-  let [gym, setGym] = React.useState('');
-  let [room, setRoom] = React.useState('');
-  let [route, setRoute] = React.useState('');
-  return (
-    <NativeBaseProvider>
-      <Box style={recordClimbingStyles.buttonContainer}>
-        <Column>
-          <Box style={recordClimbingStyles.selectWrapper}>
-            <Select
-              placeholder='Select a gym'
-              selectedValue='gym'
-              placeholderTextColor='#424242'
-              style={recordClimbingStyles.select}></Select>
-          </Box>
-          <Box style={recordClimbingStyles.selectWrapper}>
-            <Select placeholder='Select room'
-              style={recordClimbingStyles.select}
-              placeholderTextColor='#424242'
-              ></Select>
-          </Box>
-          <Box style={recordClimbingStyles.selectWrapper}>
-            <Select placeholder='Select route'
-              style={recordClimbingStyles.select}
-              placeholderTextColor='#424242'
-              ></Select>
-          </Box>
-        </Column>
-      </Box>
-    </NativeBaseProvider>
-  );
-}
+    const [timerStarted, setTimerStarted] = useState(false);
+    const [timerStopped, setTimerStopped] = useState(false);
+    const [zoneReached, setZoneReached] = useState(false);
+    const [topReached, setTopReached] = useState(false);
+    const [elapsedTime, setElapsedTime] = useState(0);
+
+    const startTimer = () => {
+        setTimerStarted(true);
+    };
+
+    const stopTimer = () => {
+        setTimerStopped(true);
+    };
+
+    const handleZoneReached = () => {
+        setZoneReached(true);
+    };
+
+    const handleTopReached = () => {
+        setTopReached(true);
+        setTimerStopped(true);
+    };
+
+    const calculateElapsedTime = () => {
+        // Calculate elapsed time here
+        // ...
+
+        setElapsedTime(/* elapsed time value */);
+    };
+
+    return (
+        <NativeBaseProvider>
+            <Box style={{marginTop: '30%'}}>
+                    {!timerStarted && (
+                        <Button onPress={startTimer}>Start Timer</Button>
+                    )}
+
+                    {timerStarted && !timerStopped && (
+                        <>
+                            <Button onPress={stopTimer}>Stop</Button>
+                            <Button onPress={handleZoneReached}>Zone Reached</Button>
+                            <Button onPress={handleTopReached}>Top Reached</Button>
+                        </>
+                    )}
+
+                    {topReached && (
+                        <Text>Elapsed Time: {elapsedTime} seconds</Text>
+                    )}
+            </Box>
+        </NativeBaseProvider>
+    );
+};
 
 export default RecordClimbing;
