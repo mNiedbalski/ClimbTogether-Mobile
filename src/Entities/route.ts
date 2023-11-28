@@ -1,27 +1,25 @@
+import { Attempt } from "./attempt";
+import { Routesetter } from "./routesetter";
 export class Route {
   id: number;
   route_name: string;
-  routesetter_id: number;
+  routesetter: Routesetter;
   difficulty: string;
-  completed: boolean;
-  attempts_id: number;
-  best_attempt_time: number;
-
+  attempts: Attempt[];
+  best_attempt: Attempt;
   constructor(
     id: number,
     route_name: string,
-    routesetter_id: number,
+    routesetter: Routesetter,
     difficulty: string,
-    completed: boolean,
-    attempts_id: number,
-    best_attempt_time: number
+    attempts: Attempt[],
+    best_attempt: Attempt,
   ) {
     this.id = id;
     this.route_name = route_name;
-    this.routesetter_id = routesetter_id;
+    this.routesetter = routesetter;
     this.difficulty = difficulty;
-    this.completed = completed;
-    this.attempts_id = attempts_id;
-    this.best_attempt_time = best_attempt_time;
+    this.attempts = attempts;
+    this.best_attempt = best_attempt;
   }
 }

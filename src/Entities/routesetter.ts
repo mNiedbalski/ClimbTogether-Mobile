@@ -1,11 +1,13 @@
+import { Route } from "./route";
+import { User } from "./user";
 export class Routesetter {
   id: number;
-  user_id: number;
-  routes_id: number;
+  user: User;
+  routes: Route[];
 
-  constructor(id: number, user_id: number, routes_id: number) {
+  constructor(id: number, user: User, routes: Route[]) {
     this.id = id;
-    this.user_id = user_id;
-    this.routes_id = routes_id;
+    this.user = user;
+    this.routes= routes;
   }
 }

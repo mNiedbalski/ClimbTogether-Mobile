@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Container, Content, Text, Box, NativeBaseProvider, Button } from 'native-base';
 
 const RecordClimbing = ({ navigation }) => {
-    const [timerStarted, setTimerStarted] = useState(false);
-    const [timerStopped, setTimerStopped] = useState(false);
-    const [zoneReached, setZoneReached] = useState(false);
-    const [topReached, setTopReached] = useState(false);
-    const [elapsedTime, setElapsedTime] = useState(0);
+    let [timerStarted, setTimerStarted] = useState(false);
+    let [timerStopped, setTimerStopped] = useState(false);
+    let [zoneReached, setZoneReached] = useState(false);
+    let [topReached, setTopReached] = useState(false);
+    let [elapsedTime, setElapsedTime] = useState(0);
 
     const startTimer = () => {
         setTimerStarted(true);
