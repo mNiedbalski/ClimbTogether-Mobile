@@ -67,8 +67,8 @@ export default function App() {
           }
         >
           <Tab.Screen
-            name="Record Climbing Navigation"
-            component={NavigateToRouteRecording}
+            name="Record Climbing" 
+            component={RecordClimbing}
             options={{
               tabBarIcon: ({ focused }) => (
                 <Ionicons name="stats-chart" size={45} color='#424242' />
@@ -76,8 +76,8 @@ export default function App() {
             }}
           />
           <Tab.Screen
-            name="Select Route"
-            component={SelectRoute}
+            name="Record Climbing Navigation"
+            component={NavigateToRouteRecording}
             options={{
               tabBarIcon: ({ focused }) => (
                 <AntDesign name="play" size={60} color='#424242' />
