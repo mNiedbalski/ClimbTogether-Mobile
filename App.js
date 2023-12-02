@@ -67,8 +67,8 @@ export default function App() {
           }
         >
           <Tab.Screen
-            name="Record Climbing" 
-            component={RecordClimbing}
+            name="Settings" 
+            component={Settings}
             options={{
               tabBarIcon: ({ focused }) => (
                 <Ionicons name="stats-chart" size={45} color='#424242' />

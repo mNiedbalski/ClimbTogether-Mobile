@@ -1,7 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { NativeBaseProvider, Box, Text, Button } from 'native-base';
 
-const RecordClimbing = ({ navigation }) => {
+const loadRouteParams = async (route) => {
+  return new Promise((resolve) => {
+    if (route.params?.route) {
+      resolve(route.params.route);
+    } else {
+      route.params?.onLoad?.((loadedRoute) => {
+        resolve(loadedRoute);
+      });
+    }
+  });
+};
+
+const RecordClimbing = ({ route }) => {
+  const [selectedRoute, setSelectedRoute] = useState({});
   const [timerStarted, setTimerStarted] = useState(false);
   const [timerStopped, setTimerStopped] = useState(false);
   const [zoneReached, setZoneReached] = useState(false);
@@ -20,6 +33,7 @@ const RecordClimbing = ({ navigation }) => {
     setZoneReached(false);
     setTopReached(false);
     setElapsedTime(0);
+    console.log(selectedRoute);
   };
 
   const stopTimer = () => {
@@ -44,6 +58,15 @@ const RecordClimbing = ({ navigation }) => {
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      const loadedRoute = await loadRouteParams(route);
+      setSelectedRoute(loadedRoute);
+    };
+
+    fetchData();
+  }, [route]);
+
+  useEffect(() => {
     let timeout;
     if (timerStarted && !timerStopped) {
       const startTime = Date.now();
@@ -62,6 +85,9 @@ const RecordClimbing = ({ navigation }) => {
   return (
     <NativeBaseProvider>
       <Box style={{ marginTop: '30%' }}>
+        <Box>
+          <Text>Attempting {selectedRoute.route_name}...</Text>
+        </Box>
         {!timerStarted && (
           <Button onPress={startTimer}>Start Timer</Button>
         )}
@@ -73,7 +99,6 @@ const RecordClimbing = ({ navigation }) => {
             <Button onPress={handleTopReached}>Top Reached</Button>
           </>
         )}
-
         {topReached && (
           <>
             <Text>Elapsed Time: {formatTime(elapsedTime)} s</Text>

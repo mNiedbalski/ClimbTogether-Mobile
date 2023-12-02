@@ -119,6 +119,15 @@ const SelectRoute = ({ navigation }) => {
               )}
             </Select>
           </Box>
+          <Box>
+            <Button
+              style={recordClimbingStyles.button}
+              onPress={() => navigation.navigate('Record Climbing', { route: route })}
+              isDisabled={!routeSelected}
+            >
+              Record Climbing
+            </Button>
+          </Box>
         </Column>
       </Box>
     </NativeBaseProvider>
