@@ -35,7 +35,6 @@ const RecordClimbing = ({ route }) => {
     updateRouteAttempts(newAttempt);
   };
   const updateRouteAttempts = (newAttempt) => {
-    console.log("AKTUALNA PROBA",newAttempt);
     setSelectedRoute(prevRoute => {
       const updatedAttempts = [...prevRoute.attempts, newAttempt];
       return { ...prevRoute, attempts: updatedAttempts };
@@ -131,7 +130,7 @@ const RecordClimbing = ({ route }) => {
         {topReached && (
           <>
             <Text>Elapsed Time: {formatTime(elapsedTime)} s</Text>
-            <Text>Parameters of attempt: {console.log(attempt)}</Text>
+            <Text>Parameters of attempt:</Text>
             <Button onPress={restartRecording}>Retry</Button>
             <Button>Go back</Button>
           </>
