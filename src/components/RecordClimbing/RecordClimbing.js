@@ -3,6 +3,8 @@ import { NativeBaseProvider, Box, Text, Button } from 'native-base';
 import { Attempt } from '../../Entities/attempt';
 import { v4 as uuidv4 } from 'uuid';
 
+import {loggedUser} from '../../../App';
+
 const loadRouteParams = async (route) => {
   return new Promise((resolve) => {
     if (route.params?.route) {
@@ -16,6 +18,7 @@ const loadRouteParams = async (route) => {
 };
 
 const RecordClimbing = ({ route }) => {
+  let [user, setUser] = useState({});
   const [attempt, setAttempt] = useState({});
   const [selectedRoute, setSelectedRoute] = useState({});
   const [timerStarted, setTimerStarted] = useState(false);
@@ -38,6 +41,11 @@ const RecordClimbing = ({ route }) => {
     setSelectedRoute(prevRoute => {
       const updatedAttempts = [...prevRoute.attempts, newAttempt];
       return { ...prevRoute, attempts: updatedAttempts };
+    });
+    setUser((prevUser) => {
+      const updatedUser = { ...prevUser, attempts: [...prevUser.attempts, newAttempt] };
+      console.log("updatedUser:", updatedUser);
+      return updatedUser;
     });
   }
 
@@ -69,14 +77,24 @@ const RecordClimbing = ({ route }) => {
     setTopReached(false);
     setElapsedTime(0);
   };
-
+  fetchUser = async () => {
+    return loggedUser;
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchUser();
+      console.log("userInfo:", data);
+      setUser(data);
+    
+    };
+    fetchData();
+  },[]);
   useEffect(() => {
     const fetchData = async () => {
       const loadedRoute = await loadRouteParams(route);
       setSelectedRoute(loadedRoute);
 
     };
-
     fetchData();
   }, [route]);
   useEffect(() => {

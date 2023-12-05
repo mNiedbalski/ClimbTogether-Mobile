@@ -11,7 +11,6 @@ import { Gym } from '../../Entities/gym';
 //TEST DATA
 
 import { testGym } from '../../../App';
-import { loggedUser } from '../../../App';
 
 //TEST DATA
 
@@ -49,7 +48,6 @@ const SelectRoute = ({ navigation }) => {
     setGym(gym);
     setGymSelected(true);
     console.log(selectedGym);
-    console.log(loggedUser);
   };
   const handleRoomChange = (room) => {
     setRoom(room);
