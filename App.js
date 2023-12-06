@@ -25,9 +25,9 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 //FIREBASE 
-import {initializeApp, getApps} from 'firebase/app'
-import {getFirestore, collection, getDocs, getDoc, doc} from 'firebase/firestore/lite';
-import {getAuth} from 'firebase/auth';
+import { initializeApp, getApps } from 'firebase/app'
+import { getFirestore, collection, getDocs, getDoc, doc } from 'firebase/firestore/lite';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC596Q0w1BBOXTPogfEGXORZVo_hLhkwTA",
@@ -41,32 +41,49 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-async function getRoles(db) {
-  const rolesCol = collection(db, 'roles');
-  const roleSnapshot = await getDocs(rolesCol);
-  const roleList = roleSnapshot.docs.map(doc => doc.data());
-  return roleList;
-}
-async function getUserFromDB(db){
+async function getUserFromDB(db) {
   const userDocRef = doc(db, "users", "8crpLIbm5aUpiTl6tXJS");
   const userSnapshot = await getDoc(userDocRef);
-  return parseUser(userSnapshot.data());
+  const fetchedUser = await parseUser(userSnapshot.data());
+  return fetchedUser;
 }
 
-function parseUser(userData) {
-  const { id, username, firstName, lastName, gender, birthDate, height, weight, roles, attempts, level, gymId, achievements } = userData;
-  console.log("roles",roles);
-  /*const parsedRoles; = roles.map(roleData => {
-    const { role_name } = roleData.data(); // Użyj roleData.data(), aby uzyskać dostęp do właściwości dokumentu
-    return new Role(roleData.id, role_name);
+async function parseUser(userData) {
+  let parsedUser = new User(); 
+  parsedUser.id = userData.id;
+  parsedUser.username = userData.username;
+  parsedUser.name = userData.name;
+  parsedUser.surname = userData.surname;
+  parsedUser.experience_points = userData.experience_points;
+  parsedUser.height = userData.height;
+  parsedUser.weight = userData.weight;
+  parsedUser.level = userData.level;
+  parsedUser.sex = userData.sex;
+  parsedUser.birthday = new Date(userData.birthday.toDate());
+  const rolesDataPromises = userData.roles.map(async (roleRef) => {
+    const roleDoc = await getDoc(roleRef);
+    const roleData = roleDoc.data();
+    return new Role(roleRef.id, roleData.role_name);
   });
-  
-  console.log("Parsed roles", parsedRoles);
-  const parsedAttempts = attempts.map(attemptData => new Attempt(attemptData.id, new Date(attemptData.date), attemptData.score, attemptData.completed, attemptData.successful));
-  const parsedAchievements = achievements.map(achievementData => new Achievement(achievementData.id, achievementData.title, achievementData.description, new Date(achievementData.date)));
-  */
-  return new User(id, username, firstName, lastName, gender, new Date(birthDate), height, weight, parsedRoles, parsedAttempts, level, gymId, parsedAchievements);
+  const attemptsDataPromises = userData.attempts.map(async (attemptRef) => {
+    const attemptDoc = await getDoc(attemptRef);
+    const attemptData = attemptDoc.data();
+    return new Attempt(attemptRef.id, new Date(attemptData.attempt_time.toDate()), attemptData.completion_time, attemptData.zone_reached, attemptData.top_reached);
+  });
 
+  const achievementsDataPromises = userData.achievements.map(async (achievementRef) => {
+    const achievementDoc = await getDoc(achievementRef);
+    const achievementData = achievementDoc.data();
+    return new Achievement(achievementRef.id, achievementData.name, achievementData.criteria, new Date(achievementData.date_acquired.toDate()));
+  });
+  const rolesDataArray = await Promise.all(rolesDataPromises);
+  const achievementsDataArray = await Promise.all(achievementsDataPromises);
+  const attemptsDataArray = await Promise.all(attemptsDataPromises);
+
+  parsedUser.attempts = attemptsDataArray;
+  parsedUser.achievements = achievementsDataArray;
+  parsedUser.roles = rolesDataArray;
+  return parsedUser;
 }
 
 //TODO: LOAD THIS DATA FROM DATABASE INSTEAD OF HARDCODING IT
@@ -90,9 +107,9 @@ export const loggedUser = new User(1, 'testUser', 'Michał', 'Niedbalski', 'male
 export function NavigateToRouteRecording() {
   return (
     <Stack.Navigator
-    screenOptions={{
-      headerShown: false,
-    }}
+      screenOptions={{
+        headerShown: false,
+      }}
     >
       <Stack.Screen name="Select Route" component={SelectRoute} />
       <Stack.Screen name="Record Climbing" component={RecordClimbing} />
@@ -101,16 +118,20 @@ export function NavigateToRouteRecording() {
 }
 
 export default function App() {
-  const [roles, setRoles] = useState([]);
   const [user, setUser] = useState({});
+
+  const fetchUser = async() => {
+    const loadedUser = await getUserFromDB(db);
+    setUser(loadedUser);
+  };
+
   useEffect(() => {
-    const data = getRoles(db);
-  },[]);
+    fetchUser();
+  }, []);
   useEffect(() => {
-    const fetchedUser = getUserFromDB(db);
-    setUser(fetchedUser);
-    console.log("USER",fetchedUser);
-  },[]);
+    console.log(user);
+  }, [user]);
+
   return (
     <NavigationContainer>
       <NativeBaseProvider>
@@ -124,7 +145,7 @@ export default function App() {
           }
         >
           <Tab.Screen
-            name="Settings" 
+            name="Settings"
             component={Settings}
             options={{
               tabBarIcon: ({ focused }) => (
