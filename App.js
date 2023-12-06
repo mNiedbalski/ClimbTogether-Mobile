@@ -122,6 +122,8 @@ export function NavigateToRouteRecording() {
 }
 
 export default function App() {
+  const [userId, setUserId] = useState(''); //TODO: CHANGE THIS TO NULL
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [user, setUser] = useState({});
 
   const fetchUser = async() => {
@@ -139,6 +141,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <NativeBaseProvider>
+        {userLoggedIn ? (
         <Tab.Navigator
           screenOptions={{
             tabBarStyle: styles.navigation,
@@ -149,8 +152,8 @@ export default function App() {
           }
         >
           <Tab.Screen
-            name="SignInPage"
-            component={SignInPage}
+            name="Settings"
+            component={Settings}
             options={{
               tabBarIcon: ({ focused }) => (
                 <Ionicons name="stats-chart" size={45} color='#424242' />
@@ -177,6 +180,9 @@ export default function App() {
             }}
           />
         </Tab.Navigator>
+        ) : (
+          <SignInPage setUserLoggedIn={setUserLoggedIn} setUserId={setUserId} />
+        )}
       </NativeBaseProvider>
     </NavigationContainer>
   );

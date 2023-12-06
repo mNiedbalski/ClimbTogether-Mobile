@@ -4,9 +4,10 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { NativeBaseProvider, Box } from 'native-base';
 import { auth } from '../../../App'
 
-const SignInPage = () => {
+const SignInPage = ({setUserLoggedIn,setUserId}) => {
     const [email, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    
 
     const handleSignIn = async () => { //Remember it checks authentication page users, not users collection
         console.log(email);
@@ -14,8 +15,8 @@ const SignInPage = () => {
         signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           // Signed in 
-          const userName = userCredential.name;
-          console.log(userName);
+          setUserLoggedIn(true);
+          setUserId(userCredential.id);
           // ...
         })
         .catch((error) => {
@@ -45,5 +46,6 @@ const SignInPage = () => {
         </NativeBaseProvider>
     );
 };
+
 
 export default SignInPage;
