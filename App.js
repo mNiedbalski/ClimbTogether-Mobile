@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { NativeBaseProvider, Box } from 'native-base';
@@ -22,13 +23,39 @@ import { Room } from './src/Entities/room';
 import { Gym } from './src/Entities/gym';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+
+//FIREBASE 
+import {initializeApp, getApps} from 'firebase/app'
+import {getFirestore, collection, getDocs} from 'firebase/firestore/lite';
+import {getAuth} from 'firebase/auth';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC596Q0w1BBOXTPogfEGXORZVo_hLhkwTA",
+  authDomain: "climb-together-e9cd9.firebaseapp.com",
+  projectId: "climb-together-e9cd9",
+  storageBucket: "climb-together-e9cd9.appspot.com",
+  messagingSenderId: "59694459094",
+  appId: "1:59694459094:web:28a866960eb10a1dfe4177",
+  measurementId: "G-9DV7ZFBH2C"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function getRoles(db) {
+  const rolesCol = collection(db, 'roles');
+  const roleSnapshot = await getDocs(rolesCol);
+  const roleList = roleSnapshot.docs.map(doc => doc.data());
+  console.log(roleList);
+  return roleList;
+}
+
 //TODO: LOAD THIS DATA FROM DATABASE INSTEAD OF HARDCODING IT
 export const userRole = new Role(1, "user");
 export const adminRole = new Role(2, "admin");
 export const attempt1 = new Attempt(1, new Date('2023-11-25'), 15.5, true, false);
 export const attempt2 = new Attempt(2, new Date('2023-11-25'), 23.1, true, true);
 export const attempt3 = new Attempt(3, new Date('2023-11-25'), 13.5, true, true);
-export const testRoute1 = new Route(1, 'Test route', 1, 'V7', [attempt1, attempt2, attempt3], attempt3);
+export const testRoute1 = new Route(1, 'Test route', 1, 'V7', [attempt1, attempt2, attempt3]);
 export const testRoom = new Room(1, 'Main room', [testRoute1]);
 export const testGym = new Gym(1, 'Gabriela Narutowicza 51, 41-200 Sosnowiec', 'Poziom 450', [testRoom]);
 export const achievements1 = new Achievement(1, 'First route', 'Complete your first route!', new Date('2023-11-25'));
@@ -54,6 +81,11 @@ export function NavigateToRouteRecording() {
 }
 
 export default function App() {
+  const [roles, setRoles] = useState([]);
+  useEffect(() => {
+    const data = getRoles(db);
+    console.log(data);
+  },[]);
   return (
     <NavigationContainer>
       <NativeBaseProvider>
