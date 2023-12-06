@@ -16,7 +16,7 @@ const SignInPage = ({setUserLoggedIn,setUserId}) => {
         .then((userCredential) => {
           // Signed in 
           setUserLoggedIn(true);
-          setUserId(userCredential.id);
+          setUserId(userCredential.user.uid);
           // ...
         })
         .catch((error) => {
