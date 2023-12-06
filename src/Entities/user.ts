@@ -3,7 +3,8 @@ import {Role} from './role';
 import {Achievement} from './achievement';
 export class User {
   id: number;
-  username: string;
+  email: string;
+  password: string;
   name: string;
   surname: string;
   sex: string;
@@ -18,7 +19,8 @@ export class User {
 
   constructor(
     id: number,
-    username: string,
+    email: string,
+    password: string,
     name: string,
     surname: string,
     sex: string,
@@ -32,7 +34,8 @@ export class User {
     achievements: Achievement[]
   ) {
     this.id = id;
-    this.username = username;
+    this.email = email;
+    this.password = password;
     this.name = name;
     this.surname = surname;
     this.sex = sex;

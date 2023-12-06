@@ -10,6 +10,7 @@ import HomePage from './src/components/HomePage/HomePage';
 import SelectRoute from './src/components/SelectRoute/SelectRoute';
 import Settings from './src/components/Settings/Settings';
 import RecordClimbing from './src/components/RecordClimbing/RecordClimbing';
+import SignInPage from './src/components/SignInPage/SignInPage';
 import styles from './AppStyles.style';
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -21,13 +22,14 @@ import { Achievement } from './src/Entities/achievement';
 import { Role } from './src/Entities/role';
 import { Room } from './src/Entities/room';
 import { Gym } from './src/Entities/gym';
+import {getAuth} from 'firebase/auth';
+
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 //FIREBASE 
 import { initializeApp, getApps } from 'firebase/app'
 import { getFirestore, collection, getDocs, getDoc, doc } from 'firebase/firestore/lite';
-import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC596Q0w1BBOXTPogfEGXORZVo_hLhkwTA",
@@ -40,6 +42,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth();
 
 async function getUserFromDB(db) {
   const userDocRef = doc(db, "users", "8crpLIbm5aUpiTl6tXJS");
@@ -51,7 +54,8 @@ async function getUserFromDB(db) {
 async function parseUser(userData) {
   let parsedUser = new User(); 
   parsedUser.id = userData.id;
-  parsedUser.username = userData.username;
+  parsedUser.email = userData.email;
+  parsedUser.password = userData.password;
   parsedUser.name = userData.name;
   parsedUser.surname = userData.surname;
   parsedUser.experience_points = userData.experience_points;
@@ -145,8 +149,8 @@ export default function App() {
           }
         >
           <Tab.Screen
-            name="Settings"
-            component={Settings}
+            name="SignInPage"
+            component={SignInPage}
             options={{
               tabBarIcon: ({ focused }) => (
                 <Ionicons name="stats-chart" size={45} color='#424242' />
@@ -178,3 +182,4 @@ export default function App() {
   );
 }
 
+export {db,app, auth};
