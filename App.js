@@ -26,7 +26,7 @@ const Stack = createNativeStackNavigator();
 
 //FIREBASE 
 import {initializeApp, getApps} from 'firebase/app'
-import {getFirestore, collection, getDocs} from 'firebase/firestore/lite';
+import {getFirestore, collection, getDocs, getDoc, doc} from 'firebase/firestore/lite';
 import {getAuth} from 'firebase/auth';
 
 const firebaseConfig = {
@@ -45,8 +45,28 @@ async function getRoles(db) {
   const rolesCol = collection(db, 'roles');
   const roleSnapshot = await getDocs(rolesCol);
   const roleList = roleSnapshot.docs.map(doc => doc.data());
-  console.log(roleList);
   return roleList;
+}
+async function getUserFromDB(db){
+  const userDocRef = doc(db, "users", "8crpLIbm5aUpiTl6tXJS");
+  const userSnapshot = await getDoc(userDocRef);
+  return parseUser(userSnapshot.data());
+}
+
+function parseUser(userData) {
+  const { id, username, firstName, lastName, gender, birthDate, height, weight, roles, attempts, level, gymId, achievements } = userData;
+  console.log("roles",roles);
+  /*const parsedRoles; = roles.map(roleData => {
+    const { role_name } = roleData.data(); // Użyj roleData.data(), aby uzyskać dostęp do właściwości dokumentu
+    return new Role(roleData.id, role_name);
+  });
+  
+  console.log("Parsed roles", parsedRoles);
+  const parsedAttempts = attempts.map(attemptData => new Attempt(attemptData.id, new Date(attemptData.date), attemptData.score, attemptData.completed, attemptData.successful));
+  const parsedAchievements = achievements.map(achievementData => new Achievement(achievementData.id, achievementData.title, achievementData.description, new Date(achievementData.date)));
+  */
+  return new User(id, username, firstName, lastName, gender, new Date(birthDate), height, weight, parsedRoles, parsedAttempts, level, gymId, parsedAchievements);
+
 }
 
 //TODO: LOAD THIS DATA FROM DATABASE INSTEAD OF HARDCODING IT
@@ -82,9 +102,14 @@ export function NavigateToRouteRecording() {
 
 export default function App() {
   const [roles, setRoles] = useState([]);
+  const [user, setUser] = useState({});
   useEffect(() => {
     const data = getRoles(db);
-    console.log(data);
+  },[]);
+  useEffect(() => {
+    const fetchedUser = getUserFromDB(db);
+    setUser(fetchedUser);
+    console.log("USER",fetchedUser);
   },[]);
   return (
     <NavigationContainer>
