@@ -8,7 +8,7 @@ import { Achievement } from '../../Entities/achievement';
 import { Role } from '../../Entities/role';
 import { Room } from '../../Entities/room';
 import { Gym } from '../../Entities/gym';
-import { fetchGymsFromDB, fetchRoomsFromDB } from '../../firebaseFunctions/fetchingFunctions';
+import { fetchGymsFromDB, fetchRoomsFromDB, fetchRoutesFromDB } from '../../firebaseFunctions/fetchingFunctions';
 //TEST DATA
 import { testGym } from '../../../App';
 import { db } from '../../../App';
@@ -18,9 +18,10 @@ import { db } from '../../../App';
 const SelectRoute = ({ navigation }) => {
   let [gyms, setGyms] = useState([]);
   let [rooms, setRooms] = useState([]);
+  let [routes, setRoutes] = useState([]);
   let [selectedGymID, setGymID] = useState('');
   let [selectedRoomID, setRoomID] = useState('');
-  let [route, setRoute] = useState('');
+  let [selectedRouteID, setRouteID] = useState('');
   let [gymSelected, setGymSelected] = useState(false);
   let [routeSelected, setRouteSelected] = useState(false);
   let [roomSelected, setRoomSelected] = useState(false);
@@ -30,22 +31,22 @@ const SelectRoute = ({ navigation }) => {
     return [testGym];
   };
 
-  //Loading database and setting up component on close
+  //Loading database on start and setting up component on close
   useEffect(() => {
     const fetchGyms = async () => {
       const data = await fetchGymsFromDB(db);
       setGyms(data);
       console.log("fetched gyms: ", data);
     }
-    
     fetchGyms();
     return () => {
       setRoomSelected(false);
       setGymSelected(false);
       console.log("Component unmounted. Resetting variables.");
     };
-    
+
   }, []);
+  //Called when gym has been selected
   useEffect(() => {
     const fetchRooms = async () => {
       const data = await fetchRoomsFromDB(db, selectedGymID);
@@ -53,7 +54,16 @@ const SelectRoute = ({ navigation }) => {
       console.log("fetched rooms: ", data);
     }
     fetchRooms();
-  },[selectedGymID]);
+  }, [selectedGymID]);
+  //Called when room has been selected
+  useEffect(() => {
+    const fetchRoutes = async () => {
+      const data = await fetchRoutesFromDB(db, selectedRoomID);
+      setRoutes(data);
+      console.log("fetched routes: ", data);
+    }
+    fetchRoutes();
+  }, [selectedRoomID]);
 
   const handleGymChange = async (selectedGymID) => {
     setGymID(selectedGymID);
@@ -64,9 +74,10 @@ const SelectRoute = ({ navigation }) => {
     setRoomSelected(true);
     console.log(selectedRoomID);
   };
-  const handleRouteChange = (value) => {
-    setRoute(value);
+  const handleRouteChange = (selectedRouteID) => {
+    setRouteID(selectedRouteID);
     setRouteSelected(true);
+    console.log(selectedRouteID);
   };
 
   return (
@@ -82,7 +93,7 @@ const SelectRoute = ({ navigation }) => {
               placeholderTextColor='#424242'
             >
               {gyms ? (
-                 gyms.map((gym) => (
+                gyms.map((gym) => (
                   <Select.Item label={gym.name} value={gym.id} key={gym.id} />
                 ))
               ) : (
@@ -111,16 +122,16 @@ const SelectRoute = ({ navigation }) => {
           <Box style={recordClimbingStyles.selectWrapper}>
             <Select
               placeholder='Select route'
-              selectedValue={route}
+              selectedValue={selectedRouteID}
               onValueChange={handleRouteChange}
               style={recordClimbingStyles.select}
               placeholderTextColor='#424242'
               isDisabled={!roomSelected}
             >
-              {roomSelected && selectedRoomID.routes ? (
-                console.log(selectedRoomID.routes),
-                selectedRoomID.routes.map((route) => (
-                  <Select.Item label={route.route_name} value={route} key={route.id} />
+              {roomSelected && routes ? (
+                console.log(routes),
+                routes.map((route) => (
+                  <Select.Item label={route.name} value={route.id} key={route.id} />
                 ))
               ) : (
                 <Select.Item label="No room selected" value={null} />
@@ -130,7 +141,7 @@ const SelectRoute = ({ navigation }) => {
           <Box>
             <Button
               style={recordClimbingStyles.button}
-              onPress={() => navigation.navigate('Record Climbing', { route: route })}
+              onPress={() => navigation.navigate('Record Climbing', { gymID: selectedGymID, roomID: selectedRoomID, routeID: selectedRouteID })}
               isDisabled={!routeSelected}
             >
               Record Climbing

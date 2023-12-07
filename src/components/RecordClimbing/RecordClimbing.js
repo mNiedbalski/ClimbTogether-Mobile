@@ -18,7 +18,9 @@ const loadRouteParams = async (route) => {
 };
 
 const RecordClimbing = ({ route }) => {
-  let [user, setUser] = useState({});
+  const [gymID, setGymID] = useState(route.params.gymID); //TODO: get gymID from loggedUser
+  const [roomID, setRoomID] = useState(route.params.roomID); //TODO: get gymID from loggedUser
+  const [routeID, setRouteID] = useState(route.params.routeID); //TODO: get gymID from loggedUser
   const [attempt, setAttempt] = useState({});
   const [selectedRoute, setSelectedRoute] = useState({});
   const [timerStarted, setTimerStarted] = useState(false);

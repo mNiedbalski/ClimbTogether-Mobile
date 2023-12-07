@@ -48,6 +48,26 @@ async function parseRooms(roomsRefs) {
   const roomsDataArray = await Promise.all(roomsDataPromises);
   return roomsDataArray;
 }
+export async function fetchRoutesFromDB(db, roomID) {
+  console.log("fetching routes from room: ", roomID);
+  const routesCollectionRef = collection(db, "rooms", roomID, "routes");
+  const routesSnapshot = await getDocs(routesCollectionRef);
+  const fetchedRoutes = await parseRoutes(routesSnapshot);
+  return fetchedRoutes;
+}
+async function parseRoutes(routesSnapshot) {
+  let routes = [];
+  routesSnapshot.forEach((doc) => {
+    const routeData = doc.data();
+    console.log("routeData", routeData);
+    const routeInfo = {
+      id: doc.id,
+      name: routeData.name,
+    };
+    routes.push(routeInfo);
+  });
+  return routes;
+}
 
 export async function getUserFromDB(db) {
   const userDocRef = doc(db, "users", auth.currentUser.uid);
