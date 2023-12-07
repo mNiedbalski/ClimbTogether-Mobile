@@ -3,8 +3,6 @@ import {Role} from './role';
 import {Achievement} from './achievement';
 export class User {
   id: number;
-  email: string;
-  password: string;
   name: string;
   surname: string;
   sex: string;
@@ -19,8 +17,6 @@ export class User {
 
   constructor(
     id: number,
-    email: string,
-    password: string,
     name: string,
     surname: string,
     sex: string,
@@ -34,8 +30,6 @@ export class User {
     achievements: Achievement[]
   ) {
     this.id = id;
-    this.email = email;
-    this.password = password;
     this.name = name;
     this.surname = surname;
     this.sex = sex;
@@ -47,17 +41,5 @@ export class User {
     this.experience_points = experience_points;
     this.level = level;
     this.achievements = achievements;
-  }
-  countUserAttempts(): number {
-    return this.attempts.length;
-  }
-  countCompletedRoutes(): number {
-    let completedRoutes = 0;
-    this.attempts.forEach(function (attempt){
-      if (attempt.top_reached) {
-        completedRoutes++;
-      }
-    })
-    return completedRoutes;
   }
 }

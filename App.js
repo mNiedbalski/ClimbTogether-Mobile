@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { NativeBaseProvider, Box } from 'native-base';
@@ -30,6 +30,7 @@ const Stack = createNativeStackNavigator();
 //FIREBASE 
 import { initializeApp, getApps } from 'firebase/app'
 import { getFirestore, collection, getDocs, getDoc, doc } from 'firebase/firestore/lite';
+import { getUserFromDB} from './src/firebaseFunctions/fetchingFunctions';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC596Q0w1BBOXTPogfEGXORZVo_hLhkwTA",
@@ -43,9 +44,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth();
-
-
-
 
 //TODO: LOAD THIS DATA FROM DATABASE INSTEAD OF HARDCODING IT
 export const userRole = new Role(1, "user");
@@ -79,71 +77,23 @@ export function NavigateToRouteRecording() {
 }
 
 export default function App() {
-  const [userId, setUserId] = useState(''); //TODO: CHANGE THIS TO NULL
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [user, setUser] = useState({});
 
-  async function getUserFromDB(db) {
-    console.log(userId);
-    const userDocRef = doc(db, "users", userId);
-    const userSnapshot = await getDoc(userDocRef);
-    const fetchedUser = await parseUser(userSnapshot.data());
-    return fetchedUser;
-  }
-  
-  async function parseUser(userData) {
-    let parsedUser = new User(); 
-    parsedUser.id = userData.id;
-    parsedUser.email = userData.email;
-    parsedUser.password = userData.password;
-    parsedUser.name = userData.name;
-    parsedUser.surname = userData.surname;
-    parsedUser.experience_points = userData.experience_points;
-    parsedUser.height = userData.height;
-    parsedUser.weight = userData.weight;
-    parsedUser.level = userData.level;
-    parsedUser.sex = userData.sex;
-    parsedUser.birthday = new Date(userData.birthday.toDate());
-    const rolesDataPromises = userData.roles.map(async (roleRef) => {
-      const roleDoc = await getDoc(roleRef);
-      const roleData = roleDoc.data();
-      return new Role(roleRef.id, roleData.role_name);
-    });
-    const attemptsDataPromises = userData.attempts.map(async (attemptRef) => {
-      const attemptDoc = await getDoc(attemptRef);
-      const attemptData = attemptDoc.data();
-      return new Attempt(attemptRef.id, new Date(attemptData.attempt_time.toDate()), attemptData.completion_time, attemptData.zone_reached, attemptData.top_reached);
-    });
-  
-    const achievementsDataPromises = userData.achievements.map(async (achievementRef) => {
-      const achievementDoc = await getDoc(achievementRef);
-      const achievementData = achievementDoc.data();
-      return new Achievement(achievementRef.id, achievementData.name, achievementData.criteria, new Date(achievementData.date_acquired.toDate()));
-    });
-    const rolesDataArray = await Promise.all(rolesDataPromises);
-    const achievementsDataArray = await Promise.all(achievementsDataPromises);
-    const attemptsDataArray = await Promise.all(attemptsDataPromises);
-  
-    parsedUser.attempts = attemptsDataArray;
-    parsedUser.achievements = achievementsDataArray;
-    parsedUser.roles = rolesDataArray;
-    return parsedUser;
-  }
 
   const fetchUser = async() => {
-    if (userId) {
+    if (auth.currentUser.uid) {
       const loadedUser = await getUserFromDB(db);
       setUser(loadedUser);
     }
   };
 
   useEffect(() => {
-    console.log("aktualne user id", userId);
-    fetchUser();
-  }, [userId]);
-  useEffect(() => {
     console.log(user);
   }, [user]);
+  useEffect(() => {
+    fetchUser();
+  },[userLoggedIn]);
 
   return (
     <NavigationContainer>
@@ -170,6 +120,7 @@ export default function App() {
           <Tab.Screen
             name="Record Climbing Navigation"
             component={NavigateToRouteRecording}
+            initialParams={{ user: user }}
             options={{
               tabBarIcon: ({ focused }) => (
                 <AntDesign name="play" size={60} color='#424242' />
@@ -180,6 +131,7 @@ export default function App() {
           <Tab.Screen
             name="Home Page"
             component={HomePage}
+            initialParams={{ user: user }}
             options={{
               tabBarIcon: ({ focused }) => (
                 <Entypo name="home" size={50} color='#424242' />
@@ -188,7 +140,7 @@ export default function App() {
           />
         </Tab.Navigator>
         ) : (
-          <SignInPage setUserLoggedIn={setUserLoggedIn} setUserId={setUserId} />
+          <SignInPage setUserLoggedIn={setUserLoggedIn}/>
         )}
       </NativeBaseProvider>
     </NavigationContainer>

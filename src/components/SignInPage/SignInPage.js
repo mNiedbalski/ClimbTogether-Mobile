@@ -5,8 +5,10 @@ import { NativeBaseProvider, Box } from 'native-base';
 import { auth } from '../../../App'
 
 const SignInPage = ({setUserLoggedIn,setUserId}) => {
-    const [email, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setUsername] = useState("ghex@gmail.com"); //TEST
+    const [password, setPassword] = useState("secretPassword");
+
+    //TEST DATA
     
 
     const handleSignIn = async () => { //Remember it checks authentication page users, not users collection
@@ -14,10 +16,7 @@ const SignInPage = ({setUserLoggedIn,setUserId}) => {
         console.log(password);
         signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          // Signed in 
           setUserLoggedIn(true);
-          setUserId(userCredential.user.uid);
-          // ...
         })
         .catch((error) => {
           const errorCode = error.code;
