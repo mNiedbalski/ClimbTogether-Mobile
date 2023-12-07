@@ -8,7 +8,7 @@ import { Achievement } from '../../Entities/achievement';
 import { Role } from '../../Entities/role';
 import { Room } from '../../Entities/room';
 import { Gym } from '../../Entities/gym';
-import { getGymsFromDB } from '../../firebaseFunctions/fetchingFunctions';
+import { fetchGymsFromDB, fetchRoomsFromDB } from '../../firebaseFunctions/fetchingFunctions';
 //TEST DATA
 import { testGym } from '../../../App';
 import { db } from '../../../App';
@@ -17,8 +17,9 @@ import { db } from '../../../App';
 
 const SelectRoute = ({ navigation }) => {
   let [gyms, setGyms] = useState([]);
-  let [selectedGym, setGym] = useState('');
-  let [selectedRoom, setRoom] = useState('');
+  let [rooms, setRooms] = useState([]);
+  let [selectedGymID, setGymID] = useState('');
+  let [selectedRoomID, setRoomID] = useState('');
   let [route, setRoute] = useState('');
   let [gymSelected, setGymSelected] = useState(false);
   let [routeSelected, setRouteSelected] = useState(false);
@@ -31,32 +32,37 @@ const SelectRoute = ({ navigation }) => {
 
   //Loading database and setting up component on close
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchGyms();
+    const fetchGyms = async () => {
+      const data = await fetchGymsFromDB(db);
       setGyms(data);
-      const newData = await getGymsFromDB(db);
-      console.log("fetched gyms: ", newData);
+      console.log("fetched gyms: ", data);
     }
     
-    fetchData();
+    fetchGyms();
     return () => {
-      gyms = [testGym];
       setRoomSelected(false);
       setGymSelected(false);
       console.log("Component unmounted. Resetting variables.");
     };
     
   }, []);
+  useEffect(() => {
+    const fetchRooms = async () => {
+      const data = await fetchRoomsFromDB(db, selectedGymID);
+      setRooms(data);
+      console.log("fetched rooms: ", data);
+    }
+    fetchRooms();
+  },[selectedGymID]);
 
-  const handleGymChange = (gym) => {
-    setGym(gym);
+  const handleGymChange = async (selectedGymID) => {
+    setGymID(selectedGymID);
     setGymSelected(true);
-    console.log(selectedGym);
   };
-  const handleRoomChange = (room) => {
-    setRoom(room);
+  const handleRoomChange = (selectedRoomID) => {
+    setRoomID(selectedRoomID);
     setRoomSelected(true);
-    console.log(selectedRoom);
+    console.log(selectedRoomID);
   };
   const handleRouteChange = (value) => {
     setRoute(value);
@@ -70,14 +76,14 @@ const SelectRoute = ({ navigation }) => {
           <Box style={recordClimbingStyles.selectWrapper}>
             <Select
               placeholder='Select a gym'
-              selectedValue={selectedGym}
+              selectedValue={selectedGymID}
               onValueChange={handleGymChange}
               style={recordClimbingStyles.select}
               placeholderTextColor='#424242'
             >
               {gyms ? (
                  gyms.map((gym) => (
-                  <Select.Item label={gym.name} value={gym} key={gym.id} />
+                  <Select.Item label={gym.name} value={gym.id} key={gym.id} />
                 ))
               ) : (
                 <Select.Item label="No gym selected" value={null} />
@@ -87,15 +93,15 @@ const SelectRoute = ({ navigation }) => {
           <Box style={recordClimbingStyles.selectWrapper}>
             <Select
               placeholder='Select room'
-              selectedValue={selectedRoom}
+              selectedValue={selectedRoomID}
               onValueChange={handleRoomChange}
               style={recordClimbingStyles.select}
               placeholderTextColor='#424242'
               isDisabled={!gymSelected}
             >
-              {gymSelected && selectedGym.rooms ? (
-                selectedGym.rooms.map((room) => (
-                  <Select.Item label={room.name} value={room} key={room.id} />
+              {gymSelected && rooms ? (
+                rooms.map((room) => (
+                  <Select.Item label={room.name} value={room.id} key={room.id} />
                 ))
               ) : (
                 <Select.Item label="No gym selected" value={null} />
@@ -111,9 +117,9 @@ const SelectRoute = ({ navigation }) => {
               placeholderTextColor='#424242'
               isDisabled={!roomSelected}
             >
-              {roomSelected && selectedRoom.routes ? (
-                console.log(selectedRoom.routes),
-                selectedRoom.routes.map((route) => (
+              {roomSelected && selectedRoomID.routes ? (
+                console.log(selectedRoomID.routes),
+                selectedRoomID.routes.map((route) => (
                   <Select.Item label={route.route_name} value={route} key={route.id} />
                 ))
               ) : (

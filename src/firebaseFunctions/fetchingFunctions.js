@@ -8,7 +8,7 @@ import {Gym} from '../Entities/gym';
 import {Room} from '../Entities/room';
 import {Route} from '../Entities/route';
 
-export async function getGymsFromDB(db) {
+export async function fetchGymsFromDB(db) {
   const gymsCollectionRef = collection(db,"gyms");
   const gymsSnapshot = await getDocs(gymsCollectionRef);
   const fetchedGyms = await parseGyms(gymsSnapshot);
@@ -16,12 +16,37 @@ export async function getGymsFromDB(db) {
 }
 export async function parseGyms(gymsSnapshot) {
   let gyms = [];
-  gymsSnapshot.forEach((gymDoc) => {
-    const gymData = gymDoc.data();
-    const gym = new Gym(gymDoc.id, gymData.address, gymData.name, gymData.rooms);
-    gyms.push(gym);
+  
+  gymsSnapshot.forEach((doc) => {
+    const gymData = doc.data();
+    const gymInfo = {
+      id: doc.id,
+      name: gymData.name,
+    };
+    gyms.push(gymInfo);
   });
   return gyms;
+}
+export async function fetchRoomsFromDB(db, gymID) {
+  const gymDocRef = doc (db, "gyms", gymID);
+  const gymSnapshot = await getDoc(gymDocRef);
+  const roomsData = await parseRooms(gymSnapshot.data().rooms);
+  return roomsData;
+}
+
+async function parseRooms(roomsRefs) {
+  const roomsDataPromises = roomsRefs.map(async (roomRef) => {
+
+    const roomDoc = await getDoc(roomRef);
+    const roomData = roomDoc.data();
+    const roomInfo = {
+      id: roomRef.id,
+      name: roomData.name,
+    };
+    return roomInfo;
+  });
+  const roomsDataArray = await Promise.all(roomsDataPromises);
+  return roomsDataArray;
 }
 
 export async function getUserFromDB(db) {
