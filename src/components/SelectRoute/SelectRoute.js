@@ -8,9 +8,10 @@ import { Achievement } from '../../Entities/achievement';
 import { Role } from '../../Entities/role';
 import { Room } from '../../Entities/room';
 import { Gym } from '../../Entities/gym';
+import { getGymsFromDB } from '../../firebaseFunctions/fetchingFunctions';
 //TEST DATA
-
 import { testGym } from '../../../App';
+import { db } from '../../../App';
 
 //TEST DATA
 
@@ -33,7 +34,10 @@ const SelectRoute = ({ navigation }) => {
     const fetchData = async () => {
       const data = await fetchGyms();
       setGyms(data);
+      const newData = await getGymsFromDB(db);
+      console.log("fetched gyms: ", newData);
     }
+    
     fetchData();
     return () => {
       gyms = [testGym];

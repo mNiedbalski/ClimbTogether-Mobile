@@ -25,7 +25,6 @@ const HomePage = () => {
                     <Text>Height: {user.height}</Text>
                     <Text>Weight: {user.weight}</Text>
                     <Text>Level: {user.level}</Text>
-
                 </Box>
             ) : (
                 <Text>Loading...</Text>
