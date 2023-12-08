@@ -1,27 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { NativeBaseProvider, Box, Text, Button } from 'native-base';
-import { Attempt } from '../../Entities/attempt';
 import { v4 as uuidv4 } from 'uuid';
+import { collection, doc, setDoc, Timestamp } from "firebase/firestore";
+import { auth, db } from '../../../App';
+import { postAttemptToDB } from '../../firebaseFunctions/postingFunctions';
 
-import {loggedUser} from '../../../App';
-
-const loadRouteParams = async (route) => {
-  return new Promise((resolve) => {
-    if (route.params?.route) {
-      resolve(route.params.route);
-    } else {
-      route.params?.onLoad?.((loadedRoute) => {
-        resolve(loadedRoute);
-      });
-    }
-  });
-};
 
 const RecordClimbing = ({ route }) => {
   const [gymID, setGymID] = useState(route.params.gymID); //TODO: get gymID from loggedUser
   const [roomID, setRoomID] = useState(route.params.roomID); //TODO: get gymID from loggedUser
   const [routeID, setRouteID] = useState(route.params.routeID); //TODO: get gymID from loggedUser
-  const [attempt, setAttempt] = useState({});
   const [selectedRoute, setSelectedRoute] = useState({});
   const [timerStarted, setTimerStarted] = useState(false);
   const [timerStopped, setTimerStopped] = useState(false);
@@ -34,22 +22,38 @@ const RecordClimbing = ({ route }) => {
     const millisecondsPart = milliseconds % 1000;
     return `${seconds}.${millisecondsPart < 100 ? '0' : ''}${millisecondsPart}`;
   };
-  const createNewAttempt = (measuredTime, wasZoneReached, wasTopReached) => {
-    const newAttempt = new Attempt(uuidv4(), new Date(), measuredTime, wasZoneReached, wasTopReached);
-    setAttempt(newAttempt);
-    updateRouteAttempts(newAttempt);
-  };
-  const updateRouteAttempts = (newAttempt) => {
-    setSelectedRoute(prevRoute => {
-      const updatedAttempts = [...prevRoute.attempts, newAttempt];
-      return { ...prevRoute, attempts: updatedAttempts };
-    });
-    setUser((prevUser) => {
-      const updatedUser = { ...prevUser, attempts: [...prevUser.attempts, newAttempt] };
-      console.log("updatedUser:", updatedUser);
-      return updatedUser;
-    });
-  }
+  const createNewAttempt = async (measuredTime, wasZoneReached, wasTopReached) => {
+    const attemptDocData = {
+      attempt_time: new Date(),
+      completion_time: measuredTime,
+      zone_reached: wasZoneReached,
+      top_reached: wasTopReached,
+    }
+    await postAttemptToDB(attemptDocData, roomID, routeID);
+    //TODO: db.collection('users').doc(this.username).collection('booksList').doc(myBookId).set...
+    //CZYLI TRZEBA ODWOLAC SIE ROBIAC KOLEKCJA PO KOLEKCJI I PO DOCSACH
+    //const userAttemptsCollectionRef = collection(db, "users", auth.currentUser.uid, "attempts");
+  // Referencja do dokumentu użytkownika
+  //const userDocRef = doc(db, 'users', auth.currentUser.uid);
+
+  // Referencja do kolekcji 'attempts' dla aktualnie zalogowanego użytkownika
+  //const attemptsCollectionRef = collection(userDocRef, 'attempts');
+
+  // Referencja do kolekcji 'attempts' dla konkretnej trasy
+ // const routeAttemptsCollectionRef = collection(db, 'rooms', roomID, 'routes', routeID, 'attempts');
+/*
+  try {
+    // Dodajemy nowy dokument do kolekcji 'attempts' dla użytkownika
+    //const newAttemptDocRef = await addDoc(userAttemptsCollectionRef, attemptDocData);
+    console.log('Added document to user attempts with ID:', newAttemptDocRef.id);
+
+    // Dodajemy nowy dokument do kolekcji 'attempts' dla konkretnej trasy
+    //const newRouteAttemptDocRef = await addDoc(routeAttemptsCollectionRef, attemptDocData);
+   // console.log('Added document to route attempts with ID:', newRouteAttemptDocRef.id);
+  } catch (error) {
+    console.error('Error adding document:', error);
+  }*/
+};
 
   const startTimer = () => {
     setTimerStarted(true);
@@ -79,26 +83,6 @@ const RecordClimbing = ({ route }) => {
     setTopReached(false);
     setElapsedTime(0);
   };
-  fetchUser = async () => {
-    return loggedUser;
-  };
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchUser();
-      console.log("userInfo:", data);
-      setUser(data);
-    
-    };
-    fetchData();
-  },[]);
-  useEffect(() => {
-    const fetchData = async () => {
-      const loadedRoute = await loadRouteParams(route);
-      setSelectedRoute(loadedRoute);
-
-    };
-    fetchData();
-  }, [route]);
   useEffect(() => {
     console.log("routes.attempts updated:", selectedRoute.attempts);
   }, [selectedRoute]);
@@ -109,9 +93,6 @@ const RecordClimbing = ({ route }) => {
   useEffect(() => {
     console.log("topReached updated:", topReached);
   }, [topReached]);
-  useEffect(() => {
-    console.log("attempt updated:", attempt);
-  }, [attempt]);
 
 
   useEffect(() => {
@@ -133,9 +114,6 @@ const RecordClimbing = ({ route }) => {
   return (
     <NativeBaseProvider>
       <Box style={{ marginTop: '30%' }}>
-        <Box>
-          <Text>Attempting {selectedRoute.route_name}...</Text>
-        </Box>
         {!timerStarted && (
           <Button onPress={startTimer}>Start Timer</Button>
         )}
