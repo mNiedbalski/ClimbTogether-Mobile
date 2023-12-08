@@ -1,47 +1,131 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button } from 'react-native';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { NativeBaseProvider, Box } from 'native-base';
+import { View, TextInput } from 'react-native';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { NativeBaseProvider, Box, Text, Input, Button } from 'native-base';
 import { auth } from '../../../App'
-
-const SignInPage = ({setUserLoggedIn,setUserId}) => {
-    const [email, setUsername] = useState("ghex@gmail.com"); //TEST
+import AppStyles from '../../../AppStyles.style';
+import signInPageStyles from './SignInPage.style';
+const SignInPage = ({ setUserLoggedIn }) => {
+    const [email, setEmail] = useState("ghex@gmail.com"); //TEST
     const [password, setPassword] = useState("secretPassword");
+    let [noAccount, setNoAccount] = useState(false);
 
-    //TEST DATA
-    
-
-    const handleSignIn = async () => { //Remember it checks authentication page users, not users collection
+    const handleSignIn = async () => {
         console.log(email);
         console.log(password);
         signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          setUserLoggedIn(true);
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorCode);
-          console.log(errorMessage);
-        });
+            .then((userCredential) => {
+                setUserLoggedIn(true);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode);
+                console.log(errorMessage);
+            });
     };
+    const switchSignInSignUp = () => {
+        setNoAccount((prevNoAccount) => !prevNoAccount);
+    };
+    const handleSignUp = async () => {
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                setUserLoggedIn(true);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode);
+                console.log(errorMessage);
+            });
+    }
 
     return (
         <NativeBaseProvider>
-            <Box style={{marginTop: '30%'}}>
-                <TextInput
-                    placeholder="Login"
-                    value={email}
-                    onChangeText={setUsername}
-                />
-                <TextInput
-                    placeholder="Password"
-                    value={password}
-                    onChangeText={setPassword}
-                />
-                <Button title="Sign In" onPress={handleSignIn} />
-            </Box>
+            <Box style={AppStyles.componentWrapper}>
+                <Box style={AppStyles.defaultContainer}>
+                    <Box style={signInPageStyles.logoPlaceholder} >
+                    </Box>
+                    {!noAccount ? (
+                        <Box style={{ height: '62.5%' }}>
+                            <Box style={signInPageStyles.inputFieldsContainer}>
+                                <Box style={signInPageStyles.inputFieldStyle}>
+                                    <Input
+                                        placeholder="E-mail"
+                                        value={email}
+                                        onChangeText={setEmail}
+                                        size="xl"
+                                    />
+                                </Box>
+                                <Box style={signInPageStyles.inputFieldStyle}>
+                                    <Input
+                                        placeholder="Password"
+                                        value={password}
+                                        onChangeText={setPassword}
+                                        size="xl"
+                                    />
+                                </Box>
 
+                            </Box>
+                            <Box style={signInPageStyles.buttonsSectionContainer}>
+                                <Box>
+                                    <Button style={AppStyles.buttonDefault}
+                                        onPress={handleSignIn}
+                                    >
+                                        Sign In
+                                    </Button>
+                                </Box>
+                                <Box style={{ marginTop: '5%' }}>
+                                    <Button style={AppStyles.buttonDefault}
+                                        onPress={switchSignInSignUp}>
+                                        No account?
+                                    </Button>
+                                </Box>
+
+                            </Box>
+                        </Box>
+                    ) : (
+                        <Box style={{ height: '62.5%' }}>
+                            <Box style={signInPageStyles.inputFieldsContainer}>
+                                <Box style={signInPageStyles.inputFieldStyle}>
+                                    <Input
+                                        placeholder="E-mail"
+                                        value={email}
+                                        onChangeText={setEmail}
+                                        size="xl"
+                                    />
+                                </Box>
+                                <Box style={signInPageStyles.inputFieldStyle}>
+                                    <Input
+                                        placeholder="Password"
+                                        value={password}
+                                        onChangeText={setPassword}
+                                        size="xl"
+                                    />
+                                </Box>
+
+                            </Box>
+                            <Box style={signInPageStyles.buttonsSectionContainer}>
+                                <Box>
+                                    <Button style={AppStyles.buttonDefault}
+                                        onPress={handleSignUp}
+                                    >
+                                        Sign Up
+                                    </Button>
+                                </Box>
+                                <Box style={{ marginTop: '5%' }}>
+                                    <Button style={AppStyles.buttonDefault}
+                                        onPress={switchSignInSignUp}>
+                                        Go back
+                                    </Button>
+                                </Box>
+
+                            </Box>
+                        </Box>
+                    )
+                    }
+                </Box>
+            </Box>
         </NativeBaseProvider>
     );
 };
