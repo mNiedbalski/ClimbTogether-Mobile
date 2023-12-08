@@ -30,29 +30,6 @@ const RecordClimbing = ({ route }) => {
       top_reached: wasTopReached,
     }
     await postAttemptToDB(attemptDocData, roomID, routeID);
-    //TODO: db.collection('users').doc(this.username).collection('booksList').doc(myBookId).set...
-    //CZYLI TRZEBA ODWOLAC SIE ROBIAC KOLEKCJA PO KOLEKCJI I PO DOCSACH
-    //const userAttemptsCollectionRef = collection(db, "users", auth.currentUser.uid, "attempts");
-  // Referencja do dokumentu użytkownika
-  //const userDocRef = doc(db, 'users', auth.currentUser.uid);
-
-  // Referencja do kolekcji 'attempts' dla aktualnie zalogowanego użytkownika
-  //const attemptsCollectionRef = collection(userDocRef, 'attempts');
-
-  // Referencja do kolekcji 'attempts' dla konkretnej trasy
- // const routeAttemptsCollectionRef = collection(db, 'rooms', roomID, 'routes', routeID, 'attempts');
-/*
-  try {
-    // Dodajemy nowy dokument do kolekcji 'attempts' dla użytkownika
-    //const newAttemptDocRef = await addDoc(userAttemptsCollectionRef, attemptDocData);
-    console.log('Added document to user attempts with ID:', newAttemptDocRef.id);
-
-    // Dodajemy nowy dokument do kolekcji 'attempts' dla konkretnej trasy
-    //const newRouteAttemptDocRef = await addDoc(routeAttemptsCollectionRef, attemptDocData);
-   // console.log('Added document to route attempts with ID:', newRouteAttemptDocRef.id);
-  } catch (error) {
-    console.error('Error adding document:', error);
-  }*/
 };
 
   const startTimer = () => {

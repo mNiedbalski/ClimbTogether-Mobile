@@ -24,6 +24,12 @@ import { Room } from './src/Entities/room';
 import { Gym } from './src/Entities/gym';
 import {getAuth} from 'firebase/auth';
 
+//Suppresing warnings in app xdd
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();//Ignore all log notifications
+
+
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
