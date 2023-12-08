@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { NativeBaseProvider, Text, Box } from 'native-base';
 import homePageStyles from './HomePage.style';
-import { auth, db } from '../../../App';
-import { getUserFromDB } from '../../firebaseFunctions/fetchingFunctions';
+import { getBasicUserInfoFromDB } from '../../firebaseFunctions/fetchingFunctions';
 
 const HomePage = () => {
     const [user, setUser] = useState({});
     const fetchUser = async () => {
-        if (auth.currentUser.uid) {
-            const loadedUser = await getUserFromDB(db);
-            setUser(loadedUser);
-        }
+        const loadedUser = await getBasicUserInfoFromDB();
+        setUser(loadedUser);
     };
     useEffect(() => {
         fetchUser();
     }, []);
+    useEffect(() => {
+        console.log(user);
+    }, [user]);
 
     return (
         <NativeBaseProvider>

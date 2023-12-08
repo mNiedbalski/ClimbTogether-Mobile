@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NativeBaseProvider, Box, Text, Button } from 'native-base';
 import { v4 as uuidv4 } from 'uuid';
 import { collection, doc, setDoc, Timestamp } from "firebase/firestore";
-import { auth, db } from '../../../App';
+import { auth } from '../../../App';
 import { postAttemptToDB } from '../../firebaseFunctions/postingFunctions';
 
 

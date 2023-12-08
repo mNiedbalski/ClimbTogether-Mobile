@@ -30,7 +30,7 @@ const Stack = createNativeStackNavigator();
 //FIREBASE 
 import { initializeApp, getApps } from 'firebase/app'
 import { getFirestore, collection, getDocs, getDoc, doc } from 'firebase/firestore/lite';
-import { getUserFromDB} from './src/firebaseFunctions/fetchingFunctions';
+import { getBasicUserInfoFromDB} from './src/firebaseFunctions/fetchingFunctions';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC596Q0w1BBOXTPogfEGXORZVo_hLhkwTA",
@@ -83,7 +83,7 @@ export default function App() {
 
   const fetchUser = async() => {
     if (auth.currentUser.uid) {
-      const loadedUser = await getUserFromDB(db);
+      const loadedUser = await getBasicUserInfoFromDB(db);
       setUser(loadedUser);
     }
   };

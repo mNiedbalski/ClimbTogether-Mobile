@@ -11,7 +11,6 @@ import { Gym } from '../../Entities/gym';
 import { fetchGymsFromDB, fetchRoomsFromDB, fetchRoutesFromDB } from '../../firebaseFunctions/fetchingFunctions';
 //TEST DATA
 import { testGym } from '../../../App';
-import { db } from '../../../App';
 
 //TEST DATA
 
@@ -34,7 +33,7 @@ const SelectRoute = ({ navigation }) => {
   //Loading database on start and setting up component on close
   useEffect(() => {
     const fetchGyms = async () => {
-      const data = await fetchGymsFromDB(db);
+      const data = await fetchGymsFromDB();
       setGyms(data);
       console.log("fetched gyms: ", data);
     }
@@ -49,7 +48,7 @@ const SelectRoute = ({ navigation }) => {
   //Called when gym has been selected
   useEffect(() => {
     const fetchRooms = async () => {
-      const data = await fetchRoomsFromDB(db, selectedGymID);
+      const data = await fetchRoomsFromDB(selectedGymID);
       setRooms(data);
       console.log("fetched rooms: ", data);
     }
@@ -58,7 +57,7 @@ const SelectRoute = ({ navigation }) => {
   //Called when room has been selected
   useEffect(() => {
     const fetchRoutes = async () => {
-      const data = await fetchRoutesFromDB(db, selectedRoomID);
+      const data = await fetchRoutesFromDB(selectedRoomID);
       setRoutes(data);
       console.log("fetched routes: ", data);
     }
