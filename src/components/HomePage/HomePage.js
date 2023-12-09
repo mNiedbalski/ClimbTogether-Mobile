@@ -2,35 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { NativeBaseProvider, Text, Box, Row, Column, Center } from 'native-base';
 import homePageStyles from './HomePage.style';
 import defaultStyles from '../../../AppStyles.style';
-import { getBasicUserInfoFromDB } from '../../firebaseFunctions/fetchingFunctions';
+import { getBasicUserInfoFromDB, getRoutesCompletedCountFromDB } from '../../firebaseFunctions/fetchingFunctions';
 
-const LoadingBar = ({ user }) => {
-    const experiencePercentage = (user.experience_points / 10) * 100;
 
-    return (
-        <Box style={{ width: '95%', height: '12%', backgroundColor: '#FDFCEC', marginLeft: 'auto', marginRight: 'auto', borderRadius: 10, justifyContent: 'center' }}>
-            <Center>
-                <Text fontSize={20}>{user.experience_points}/10</Text>
-                <Box
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        bottom: 0,
-                        width: `${experiencePercentage}%`,
-                        backgroundColor: '#EEB959',  // Kolor paska ładowania
-                        borderRadius: 10,
-                    }}
-                />
-            </Center>
-        </Box>
-    );
-};
 const HomePage = () => {
     const [user, setUser] = useState({});
+    const [attemptsFinished, setAttemptsFinished] = useState(0);
     const fetchUser = async () => {
         const loadedUser = await getBasicUserInfoFromDB();
+        const amountOfAttemptsFinished = await getRoutesCompletedCountFromDB();
         setUser(loadedUser);
+        setAttemptsFinished(amountOfAttemptsFinished);
     };
     useEffect(() => {
         fetchUser();
@@ -84,7 +66,7 @@ const HomePage = () => {
                                     <Text> Routes completed: </Text>
                                 </Box>
                                 <Box style={homePageStyles.statField}>
-                                    <Text> Routes amount</Text>
+                                    <Text> {attemptsFinished}</Text>
                                 </Box>
                             </Column>
                             <Column>

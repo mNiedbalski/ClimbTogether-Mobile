@@ -34,8 +34,8 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 //FIREBASE 
-import { initializeApp, getApps } from 'firebase/app'
-import { getFirestore, collection, getDocs, getDoc, doc } from 'firebase/firestore/lite';
+import { initializeApp } from 'firebase/app'
+import { getFirestore} from 'firebase/firestore';
 import { getBasicUserInfoFromDB} from './src/firebaseFunctions/fetchingFunctions';
 
 const firebaseConfig = {

@@ -1,12 +1,16 @@
 import { auth, db } from '../../App';
-import { getDoc,getDocs, doc, collection } from 'firebase/firestore/lite';
+//import { getDoc,getDocs, doc, collection } from 'firebase/firestore/lite'; //Lite version, but I need more powerful queries
+import { getDoc, getDocs, doc, collection, query, where, getCountFromServer} from 'firebase/firestore';
 import { User } from '../Entities/user';
-import { Attempt } from '../Entities/attempt';
 import { Achievement } from '../Entities/achievement';
 import { Role } from '../Entities/role';
-import {Gym} from '../Entities/gym';
-import {Room} from '../Entities/room';
-import {Route} from '../Entities/route';
+export async function getRoutesCompletedCountFromDB() {
+  const attemptsCollectionRef = collection(db, "users", auth.currentUser.uid, "attempts");
+  const q = query(attemptsCollectionRef, where("top_reached", "==", true));
+  const querySnapshot = await getCountFromServer(q);
+  console.log("count", querySnapshot.data().count);
+  return querySnapshot.data().count;
+};
 
 export async function fetchGymsFromDB() {
   const gymsCollectionRef = collection(db,"gyms");

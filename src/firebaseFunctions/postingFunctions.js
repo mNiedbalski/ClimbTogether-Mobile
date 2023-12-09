@@ -1,5 +1,5 @@
 import {auth,db} from '../../App';
-import {runTransaction,collection, addDoc, setDoc, doc} from 'firebase/firestore/lite';
+import {runTransaction,collection, addDoc, setDoc, doc} from 'firebase/firestore';
 
 export async function postAttemptToDB(attemptData, roomID, routeID) {
   const userAttemptsCollectionRef = collection(db, "users", auth.currentUser.uid, "attempts");
