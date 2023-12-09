@@ -4,6 +4,76 @@ import { getDoc, getDocs, doc, collection, query, where, getCountFromServer} fro
 import { User } from '../Entities/user';
 import { Achievement } from '../Entities/achievement';
 import { Role } from '../Entities/role';
+
+export async function findMaxDifficultyRoute () {
+  const userAttemptsCollectionRef = collection(db, "users", auth.currentUser.uid, "attempts");
+  const userAttemptsSnapshot = await getDocs(userAttemptsCollectionRef);
+  const userAttemptsIDs = userAttemptsSnapshot.docs.map(doc => doc.id);
+
+  // Pobierz trasy z takimi samymi IDs jak attempts użytkownika
+  const routesWithUserAttempts = [];
+
+  // Iteruj przez pomieszczenia
+  const roomsCollectionRef = collection(db, "rooms");
+  const roomsSnapshot = await getDocs(roomsCollectionRef);
+
+  for (const roomDoc of roomsSnapshot.docs) {
+    const roomID = roomDoc.id;
+
+    // Iteruj przez trasy w pomieszczeniu
+    const routesCollectionRef = collection(db, "rooms", roomID, "routes");
+    const routesSnapshot = await getDocs(routesCollectionRef);
+
+    for (const routeDoc of routesSnapshot.docs) {
+      const routeID = routeDoc.id;
+
+      // Iteruj przez attempts w trasie
+      const attemptsCollectionRef = collection(db, "rooms", roomID, "routes", routeID, "attempts");
+
+      for (const attemptID of userAttemptsIDs) {
+        const routeRef = doc(attemptsCollectionRef, attemptID);
+        const routeSnapshot = await getDoc(routeRef);
+
+        if (routeSnapshot.exists()) {
+          routesWithUserAttempts.push(routeDoc.data());
+        }
+      }
+    }
+  }
+  console.log("TRASY KTORE ROBIL USER", routesWithUserAttempts);
+
+  // Znajdź trasę o najwyższym poziomie trudności
+  let maxDifficultyRoute = null;
+  let maxDifficulty = -1;
+
+  for (const route of routesWithUserAttempts) {
+    const difficultyValue = extractDifficultyValue(route.difficulty);
+
+    if (difficultyValue > maxDifficulty) {
+      maxDifficulty = difficultyValue;
+      maxDifficultyRoute = route;
+    }
+  }
+  console.log("maxDifficulty", maxDifficulty);
+  console.log("maxDifficultyRoute", maxDifficultyRoute);
+
+  return maxDifficultyRoute;
+};
+
+const extractDifficultyValue = (difficulty) => {
+  if (difficulty) {
+    const match = difficulty.match(/V(\d+)([+-])?/);
+
+    if (match) {
+      const value = parseInt(match[1], 10);
+      const modifier = match[2] === '-' ? -0.5 : match[2] === '+' ? 0.5 : 0;
+
+      return value + modifier;
+    }
+  }
+  return 0;
+};
+
 export async function getRoutesCompletedCountFromDB() {
   const attemptsCollectionRef = collection(db, "users", auth.currentUser.uid, "attempts");
   const q = query(attemptsCollectionRef, where("top_reached", "==", true));

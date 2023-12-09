@@ -2,17 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { NativeBaseProvider, Text, Box, Row, Column, Center } from 'native-base';
 import homePageStyles from './HomePage.style';
 import defaultStyles from '../../../AppStyles.style';
-import { getBasicUserInfoFromDB, getRoutesCompletedCountFromDB } from '../../firebaseFunctions/fetchingFunctions';
+import { getBasicUserInfoFromDB, getRoutesCompletedCountFromDB, findMaxDifficultyRoute } from '../../firebaseFunctions/fetchingFunctions';
 
 
 const HomePage = () => {
     const [user, setUser] = useState({});
     const [attemptsFinished, setAttemptsFinished] = useState(0);
+    const [maxDifficultyRoute, setMaxDifficultyRoute] = useState(0);
     const fetchUser = async () => {
         const loadedUser = await getBasicUserInfoFromDB();
         const amountOfAttemptsFinished = await getRoutesCompletedCountFromDB();
+        const hardestRoute = await findMaxDifficultyRoute();
         setUser(loadedUser);
         setAttemptsFinished(amountOfAttemptsFinished);
+        setMaxDifficultyRoute(hardestRoute);
     };
     useEffect(() => {
         fetchUser();
@@ -63,7 +66,7 @@ const HomePage = () => {
                         <Row space={8} style={{marginLeft: '5%', marginTop: '5%'}}>
                             <Column>
                                 <Box>
-                                    <Text> Routes completed: </Text>
+                                    <Text> Attempts finished: </Text>
                                 </Box>
                                 <Box style={homePageStyles.statField}>
                                     <Text> {attemptsFinished}</Text>
@@ -74,7 +77,7 @@ const HomePage = () => {
                                     <Text> Max difficulty completed: </Text>
                                 </Box>
                                 <Box style={homePageStyles.statField}>
-                                    <Text> Difficulty value</Text>
+                                    <Text> {maxDifficultyRoute.difficulty}</Text>
                                 </Box>
                             </Column>
                         </Row>
