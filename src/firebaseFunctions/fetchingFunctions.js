@@ -5,6 +5,20 @@ import { User } from '../Entities/user';
 import { Achievement } from '../Entities/achievement';
 import { Role } from '../Entities/role';
 
+export async function getUserExperienceFromDB(){
+  const userDocRef = doc(db, "users", auth.currentUser.uid);
+  const userSnapshot = await getDoc(userDocRef);
+  const userData = userSnapshot.data();
+  console.log("userExp",userData.experience_points);
+  return userData.experience_points;
+}
+export async function getRouteDifficultyFromDB(routeID, roomID) {
+  const routeDocRef = doc(db, "rooms", roomID, "routes", routeID);
+  const routeSnapshot = await getDoc(routeDocRef);
+  const routeData = routeSnapshot.data();
+  return routeData.difficulty;
+}
+
 export async function findMaxDifficultyRoute () {
   const userAttemptsCollectionRef = collection(db, "users", auth.currentUser.uid, "attempts");
   const userAttemptsSnapshot = await getDocs(userAttemptsCollectionRef);
@@ -40,7 +54,6 @@ export async function findMaxDifficultyRoute () {
       }
     }
   }
-  console.log("TRASY KTORE ROBIL USER", routesWithUserAttempts);
 
   // Znajdź trasę o najwyższym poziomie trudności
   let maxDifficultyRoute = null;
@@ -54,13 +67,11 @@ export async function findMaxDifficultyRoute () {
       maxDifficultyRoute = route;
     }
   }
-  console.log("maxDifficulty", maxDifficulty);
-  console.log("maxDifficultyRoute", maxDifficultyRoute);
 
   return maxDifficultyRoute;
 };
 
-const extractDifficultyValue = (difficulty) => {
+export const extractDifficultyValue = (difficulty) => {
   if (difficulty) {
     const match = difficulty.match(/V(\d+)([+-])?/);
 
@@ -78,7 +89,6 @@ export async function getRoutesCompletedCountFromDB() {
   const attemptsCollectionRef = collection(db, "users", auth.currentUser.uid, "attempts");
   const q = query(attemptsCollectionRef, where("top_reached", "==", true));
   const querySnapshot = await getCountFromServer(q);
-  console.log("count", querySnapshot.data().count);
   return querySnapshot.data().count;
 };
 
@@ -123,7 +133,6 @@ async function parseRooms(roomsRefs) {
   return roomsDataArray;
 }
 export async function fetchRoutesFromDB(roomID) {
-  console.log("fetching routes from room: ", roomID);
   const routesCollectionRef = collection(db, "rooms", roomID, "routes");
   const routesSnapshot = await getDocs(routesCollectionRef);
   const fetchedRoutes = await parseRoutes(routesSnapshot);
@@ -133,7 +142,6 @@ async function parseRoutes(routesSnapshot) {
   let routes = [];
   routesSnapshot.forEach((doc) => {
     const routeData = doc.data();
-    console.log("routeData", routeData);
     const routeInfo = {
       id: doc.id,
       name: routeData.name,
@@ -150,18 +158,6 @@ export async function getBasicUserInfoFromDB() {
   return fetchedUser;
 }
 async function parseUser(userData) {
-  console.log("parsing user data: ", userData);
-  let parsedUser = new User();
-  parsedUser.id = auth.currentUser.uid;
-  parsedUser.name = userData.name;
-  parsedUser.surname = userData.surname;
-  parsedUser.experience_points = userData.experience_points;
-  parsedUser.height = userData.height;
-  parsedUser.weight = userData.weight;
-  parsedUser.level = userData.level;
-  parsedUser.sex = userData.sex;
-  parsedUser.birthday = new Date(userData.birthday.toDate());
-  console.log("parsed user: ", parsedUser);
   const rolesDataPromises = userData.roles.map(async (roleRef) => {
     const roleDoc = await getDoc(roleRef);
     const roleData = roleDoc.data();
@@ -175,16 +171,18 @@ async function parseUser(userData) {
     return new Achievement(achievementRef.id, achievementData.name, achievementData.criteria, new Date(achievementData.date_acquired.toDate()));
   });
   const achievementsDataArray = await Promise.all(achievementsDataPromises);
-  /* NOT NEEDED HERE
-  const attemptsDataPromises = userData.attempts.map(async (attemptRef) => {
-    const attemptDoc = await getDoc(attemptRef);
-    const attemptData = attemptDoc.data();
-    return new Attempt(attemptRef.id, new Date(attemptData.attempt_time.toDate()), attemptData.completion_time, attemptData.zone_reached, attemptData.top_reached);
-  });
-  const attemptsDataArray = await Promise.all(attemptsDataPromises);
-*/
-  parsedUser.roles = rolesDataArray;
-  parsedUser.achievements = achievementsDataArray;
-  console.log("parsed user: ", parsedUser);
+  const parsedUser = {
+    id: auth.currentUser.uid,
+    name: userData.name,
+    surname: userData.surname,
+    experience_points: userData.experience_points,
+    height: userData.height,
+    weight: userData.weight,
+    level: userData.level,
+    sex: userData.sex,
+    birthday: new Date(userData.birthday.toDate()),
+    roles: rolesDataArray,
+    achievements: achievementsDataArray,
+  };
   return parsedUser;
 }

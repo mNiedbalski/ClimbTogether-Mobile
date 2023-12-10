@@ -1,9 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { NativeBaseProvider, Box, Text, Button } from 'native-base';
-import { v4 as uuidv4 } from 'uuid';
-import { collection, doc, setDoc, Timestamp } from "firebase/firestore";
-import { auth } from '../../../App';
-import { postAttemptToDB } from '../../firebaseFunctions/postingFunctions';
+import { postAttemptToDB, updateUserExperience, updateUserLevel } from '../../firebaseFunctions/postingFunctions';
+import { getUserExperienceFromDB, getRouteDifficultyFromDB, extractDifficultyValue } from '../../firebaseFunctions/fetchingFunctions';
+
+const calculateUserExperienceAndUpdate = async (checkedRoomID, checkedRouteID ) => {
+  let userExperience = await getUserExperienceFromDB();
+  const completedRouteDifficulty = await getRouteDifficultyFromDB(checkedRouteID, checkedRoomID);
+  const expPoints = extractDifficultyValue(completedRouteDifficulty);
+  if (userExperience + expPoints >= 10) {
+    updateUserLevel();
+    userExperience = userExperience + expPoints - 10;
+    updateUserExperience(userExperience);
+  }
+  else {
+    userExperience = expPoints;
+    updateUserExperience(userExperience);
+  }
+}
 
 
 const RecordClimbing = ({ route }) => {
@@ -30,6 +43,7 @@ const RecordClimbing = ({ route }) => {
       top_reached: wasTopReached,
     }
     await postAttemptToDB(attemptDocData, roomID, routeID);
+    await calculateUserExperienceAndUpdate(roomID, routeID);
 };
 
   const startTimer = () => {
@@ -52,6 +66,7 @@ const RecordClimbing = ({ route }) => {
   const handleTopReached = () => {
     setTimerStopped(true);
     createNewAttempt(elapsedTime, true, true);
+    restartRecording();
   };
   const restartRecording = () => {
     setTimerStarted(false);

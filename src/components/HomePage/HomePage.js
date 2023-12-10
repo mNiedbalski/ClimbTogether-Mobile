@@ -9,16 +9,23 @@ const HomePage = () => {
     const [user, setUser] = useState({});
     const [attemptsFinished, setAttemptsFinished] = useState(0);
     const [maxDifficultyRoute, setMaxDifficultyRoute] = useState(0);
+
+    const fetchAttemptsInfo = async () => {
+        const amountOfAttemptsFinished = await getRoutesCompletedCountFromDB();
+        setAttemptsFinished(amountOfAttemptsFinished);
+    };
+    const fetchHardestRouteInfo = async () => {
+        const hardestRoute = await findMaxDifficultyRoute();
+        setMaxDifficultyRoute(hardestRoute);
+    };
     const fetchUser = async () => {
         const loadedUser = await getBasicUserInfoFromDB();
-        const amountOfAttemptsFinished = await getRoutesCompletedCountFromDB();
-        const hardestRoute = await findMaxDifficultyRoute();
         setUser(loadedUser);
-        setAttemptsFinished(amountOfAttemptsFinished);
-        setMaxDifficultyRoute(hardestRoute);
     };
     useEffect(() => {
         fetchUser();
+        fetchAttemptsInfo();
+        fetchHardestRouteInfo();
     }, []);
     useEffect(() => {
         console.log(user);
@@ -63,7 +70,7 @@ const HomePage = () => {
                                 </Center>
                             </Box>
                         </Box>
-                        <Row space={8} style={{marginLeft: '5%', marginTop: '5%'}}>
+                        <Row space={8} style={{ marginLeft: '5%', marginTop: '5%' }}>
                             <Column>
                                 <Box>
                                     <Text> Attempts finished: </Text>
