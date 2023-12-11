@@ -17,11 +17,6 @@ const RouteSetterPanel = ({ navigation }) => {
         setRoutes(data);
         setGymSelected(true);
     };
-    const handlePressedRoute = async (selectedRouteID, selectedRoomID) => {
-        const data = await fetchRouteFromDB(selectedRoomID, selectedRouteID);
-        //TODO: navigate to route modification screen
-        //console.log("zaladowane dane: ", data);
-    };
     useEffect(() => {
         const fetchGyms = async () => {
             const data = await fetchGymsFromDB();
@@ -71,9 +66,9 @@ const RouteSetterPanel = ({ navigation }) => {
                                                         <Box>
                                                             <Button
                                                                 style={routeSetterPanelStyles.routeButton}
-                                                                onPress={() => handlePressedRoute(route.id, route.roomID)}
+                                                                onPress={() => navigation.navigate('View Route Info', { routeID: route.id, roomID: route.roomID })}
                                                             >
-                                                                <Box style={{ backgroundColor: 'yellow' }}>
+                                                                <Box>
                                                                     <Text >{route.name}</Text>
                                                                 </Box>
                                                             </Button>

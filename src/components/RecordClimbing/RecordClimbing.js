@@ -20,9 +20,9 @@ const calculateUserExperienceAndUpdate = async (checkedRoomID, checkedRouteID ) 
 
 
 const RecordClimbing = ({ route }) => {
-  const [gymID, setGymID] = useState(route.params.gymID); //TODO: get gymID from loggedUser
-  const [roomID, setRoomID] = useState(route.params.roomID); //TODO: get gymID from loggedUser
-  const [routeID, setRouteID] = useState(route.params.routeID); //TODO: get gymID from loggedUser
+  const [gymID, setGymID] = useState(route.params.gymID); 
+  const [roomID, setRoomID] = useState(route.params.roomID); 
+  const [routeID, setRouteID] = useState(route.params.routeID); 
   const [selectedRoute, setSelectedRoute] = useState({});
   const [timerStarted, setTimerStarted] = useState(false);
   const [timerStopped, setTimerStopped] = useState(false);
