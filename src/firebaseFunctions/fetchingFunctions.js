@@ -1,15 +1,44 @@
 import { auth, db } from '../../App';
 //import { getDoc,getDocs, doc, collection } from 'firebase/firestore/lite'; //Lite version, but I need more powerful queries
-import { getDoc, getDocs, doc, collection, query, where, getCountFromServer} from 'firebase/firestore';
+import { getDoc, getDocs, doc, collection, query, where, getCountFromServer } from 'firebase/firestore';
 import { User } from '../Entities/user';
 import { Achievement } from '../Entities/achievement';
 import { Role } from '../Entities/role';
 
-export async function getUserExperienceFromDB(){
+export async function fetchRouteFromDB(roomID, routeID) {
+  const routeDocRef = doc(db, "rooms", roomID, "routes", routeID);
+  const routeSnapshot = await getDoc(routeDocRef);
+  const fetchedRoute = await parseRoute(routeSnapshot.data(), routeDocRef.id);
+  console.log("Info o trasie", fetchedRoute);
+  return fetchedRoute;
+}
+async function parseRoute(routeData, routeID) {
+  const routeSetterInfo = await fetchRouteSetterNameFromDB(routeData, routeID);
+  const routeInfo = {
+    id: routeID,
+    name: routeData.name,
+    difficulty: routeData.difficulty,
+    routeSetter: routeSetterInfo,
+  };
+  return routeInfo;
+}
+export async function fetchRouteSetterNameFromDB(routeData) {
+  if (routeData && routeData.routesetter) {
+    const routesetterSnapshot = await getDoc(routeData.routesetter);
+    const routesetterData = routesetterSnapshot.data();
+    if (routesetterData) {
+      const fullName = `${routesetterData.name} ${routesetterData.surname}`;
+      return fullName;
+    }
+    return null;
+  }
+}
+
+export async function getUserExperienceFromDB() {
   const userDocRef = doc(db, "users", auth.currentUser.uid);
   const userSnapshot = await getDoc(userDocRef);
   const userData = userSnapshot.data();
-  console.log("userExp",userData.experience_points);
+  console.log("userExp", userData.experience_points);
   return userData.experience_points;
 }
 export async function getRouteDifficultyFromDB(routeID, roomID) {
@@ -19,7 +48,7 @@ export async function getRouteDifficultyFromDB(routeID, roomID) {
   return routeData.difficulty;
 }
 
-export async function findMaxDifficultyRoute () {
+export async function findMaxDifficultyRoute() {
   const userAttemptsCollectionRef = collection(db, "users", auth.currentUser.uid, "attempts");
   const userAttemptsSnapshot = await getDocs(userAttemptsCollectionRef);
   const userAttemptsIDs = userAttemptsSnapshot.docs.map(doc => doc.id);
@@ -93,14 +122,14 @@ export async function getRoutesCompletedCountFromDB() {
 };
 
 export async function fetchGymsFromDB() {
-  const gymsCollectionRef = collection(db,"gyms");
+  const gymsCollectionRef = collection(db, "gyms");
   const gymsSnapshot = await getDocs(gymsCollectionRef);
   const fetchedGyms = await parseGyms(gymsSnapshot);
   return fetchedGyms;
 }
 export async function parseGyms(gymsSnapshot) {
   let gyms = [];
-  
+
   gymsSnapshot.forEach((doc) => {
     const gymData = doc.data();
     const gymInfo = {
@@ -112,7 +141,7 @@ export async function parseGyms(gymsSnapshot) {
   return gyms;
 }
 export async function fetchRoomsFromDB(gymID) {
-  const gymDocRef = doc (db, "gyms", gymID);
+  const gymDocRef = doc(db, "gyms", gymID);
   const gymSnapshot = await getDoc(gymDocRef);
   const roomsData = await parseRooms(gymSnapshot.data().rooms);
   return roomsData;
@@ -132,19 +161,45 @@ async function parseRooms(roomsRefs) {
   const roomsDataArray = await Promise.all(roomsDataPromises);
   return roomsDataArray;
 }
+export async function fetchAllRoutesFromGym(gymID) {
+  const gymDocRef = doc(db, "gyms", gymID);
+  const gymSnapshot = await getDoc(gymDocRef);
+
+  if (!gymSnapshot.exists()) {
+    console.error("Gym not found");
+    return [];
+  }
+
+  const gymData = gymSnapshot.data();
+  const allRoutes = [];
+
+  // Iteracja przez referencje do rooms w danym gymie
+  for (const roomRef of gymData.rooms) {
+    const roomID = roomRef.id;
+
+    // Wywołanie funkcji fetchRoutesFromDB dla danego room
+    const routesFromRoom = await fetchRoutesFromDB(roomID);
+
+    // Dodanie tras z danego room do ogólnej tablicy
+    allRoutes.push(...routesFromRoom);
+  }
+
+  return allRoutes;
+}
 export async function fetchRoutesFromDB(roomID) {
   const routesCollectionRef = collection(db, "rooms", roomID, "routes");
   const routesSnapshot = await getDocs(routesCollectionRef);
-  const fetchedRoutes = await parseRoutes(routesSnapshot);
+  const fetchedRoutes = await parseRoutes(routesSnapshot, roomID);
   return fetchedRoutes;
 }
-async function parseRoutes(routesSnapshot) {
+async function parseRoutes(routesSnapshot, routeRoomID) {
   let routes = [];
   routesSnapshot.forEach((doc) => {
     const routeData = doc.data();
     const routeInfo = {
       id: doc.id,
       name: routeData.name,
+      roomID: routeRoomID,
     };
     routes.push(routeInfo);
   });
@@ -164,7 +219,7 @@ async function parseUser(userData) {
     return new Role(roleRef.id, roleData.role_name);
   });
   const rolesDataArray = await Promise.all(rolesDataPromises);
-  
+
   const achievementsDataPromises = userData.achievements.map(async (achievementRef) => {
     const achievementDoc = await getDoc(achievementRef);
     const achievementData = achievementDoc.data();

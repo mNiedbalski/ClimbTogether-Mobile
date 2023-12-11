@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { NativeBaseProvider, Text, Box, Row, Column, Center } from 'native-base';
+import { NativeBaseProvider, Text, Box, Row, Column, Center, Button } from 'native-base';
 import homePageStyles from './HomePage.style';
 import defaultStyles from '../../../AppStyles.style';
 import { getBasicUserInfoFromDB, getRoutesCompletedCountFromDB, findMaxDifficultyRoute } from '../../firebaseFunctions/fetchingFunctions';
-
-
-const HomePage = () => {
+//TODO: Add loading indicator if data hasnt been loaded yet
+//TODO: Add user profile pictures
+const HomePage = ({ navigation }) => {
     const [user, setUser] = useState({});
     const [attemptsFinished, setAttemptsFinished] = useState(0);
     const [maxDifficultyRoute, setMaxDifficultyRoute] = useState(0);
@@ -90,6 +90,9 @@ const HomePage = () => {
                         </Row>
                     </Column>
                 </Box>
+                <Button
+                  onPress={() => navigation.navigate('Route Setter Panel')}  
+                >Routesetter panel</Button>
             </Box>
 
         </NativeBaseProvider>

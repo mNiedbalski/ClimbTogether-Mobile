@@ -24,7 +24,7 @@ const defaultStyles = StyleSheet.create({
   },
   buttonDefault:{
     backgroundColor: '#424242',
-    color: '#EEB959',
+    color: '#FDFCEC',
   }
 });
 

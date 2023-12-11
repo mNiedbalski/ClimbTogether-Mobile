@@ -1,18 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { NativeBaseProvider, Box, Button, Column, Select } from 'native-base';
 import recordClimbingStyles from './SelectRoute.style';
-import { Route } from '../../Entities/route';
-import { User } from '../../Entities/user';
-import { Attempt } from '../../Entities/attempt';
-import { Achievement } from '../../Entities/achievement';
-import { Role } from '../../Entities/role';
-import { Room } from '../../Entities/room';
-import { Gym } from '../../Entities/gym';
-import { fetchGymsFromDB, fetchRoomsFromDB, fetchRoutesFromDB } from '../../firebaseFunctions/fetchingFunctions';
-//TEST DATA
-import { testGym } from '../../../App';
 
-//TEST DATA
+import { fetchGymsFromDB, fetchRoomsFromDB, fetchRoutesFromDB } from '../../firebaseFunctions/fetchingFunctions';
 
 const SelectRoute = ({ navigation }) => {
   let [gyms, setGyms] = useState([]);
@@ -25,10 +15,6 @@ const SelectRoute = ({ navigation }) => {
   let [routeSelected, setRouteSelected] = useState(false);
   let [roomSelected, setRoomSelected] = useState(false);
 
-  //Fetching gyms from database
-  fetchGyms = async () => {
-    return [testGym];
-  };
 
   //Loading database on start and setting up component on close
   useEffect(() => {
