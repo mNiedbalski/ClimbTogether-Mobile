@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { NativeBaseProvider, Text, Box, Row, Column, Center, Button, Select, ScrollView } from 'native-base';
 import defaultStyles from '../../../AppStyles.style';
-import routeSetterPanelStyles from './RouteSetterPanel.style';
+import routeSetterPanelStyles from './BrowseRoutes.style';
 import { fetchGymsFromDB, fetchAllRoutesFromGym, fetchRouteFromDB } from '../../firebaseFunctions/fetchingFunctions';
 
-const RouteSetterPanel = ({ navigation }) => {
+const BrowseRoutes = ({ navigation }) => {
     let [selectedGymID, setGymID] = useState('');
     let [gyms, setGyms] = useState([]);
     let [gymSelected, setGymSelected] = useState(false);
@@ -93,4 +93,4 @@ const RouteSetterPanel = ({ navigation }) => {
     );
 };
 
-export default RouteSetterPanel;
+export default BrowseRoutes;

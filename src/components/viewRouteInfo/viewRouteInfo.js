@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NativeBaseProvider, Text, Box, Row, Column, Center, Button, Select, ScrollView } from 'native-base';
 import defaultStyles from '../../../AppStyles.style';
-import routeSetterPanelStyles from '../RouteSetterPanel/RouteSetterPanel.style'
+import routeSetterPanelStyles from '../BrowseRoutes/BrowseRoutes.style'
 import { fetchRouteFromDB } from '../../firebaseFunctions/fetchingFunctions';
 
 const ViewRouteInfo = ({ route }) => {

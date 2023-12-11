@@ -9,7 +9,7 @@ import SelectRoute from './src/components/SelectRoute/SelectRoute';
 import Settings from './src/components/Settings/Settings';
 import RecordClimbing from './src/components/RecordClimbing/RecordClimbing';
 import SignInPage from './src/components/SignInPage/SignInPage';
-import RouteSetterPanel from './src/components/RouteSetterPanel/RouteSetterPanel';
+import BrowseRoutes from './src/components/BrowseRoutes/BrowseRoutes';
 import ViewRouteInfo from './src/components/viewRouteInfo/viewRouteInfo';
 
 import styles from './AppStyles.style';
@@ -65,7 +65,7 @@ export function NavigateToDifferentPanels(){
       }}
     >
       <Stack.Screen name="Home Page" component={HomePage} />
-      <Stack.Screen name="Route Setter Panel" component={RouteSetterPanel} />
+      <Stack.Screen name="Route Setter Panel" component={BrowseRoutes} />
       <Stack.Screen name="View Route Info" component={ViewRouteInfo} />
     </Stack.Navigator>
   )
