@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { NativeBaseProvider, Text, Box, Row, Column, Center, Button, Select, ScrollView } from 'native-base';
 import defaultStyles from '../../../AppStyles.style';
 import routeSetterPanelStyles from './BrowseRoutes.style';
-import { fetchGymsFromDB, fetchAllRoutesFromGym, fetchRouteFromDB } from '../../firebaseFunctions/fetchingFunctions';
+import { fetchGymsFromDB, fetchAllRoutesFromGym, getBasicUserInfoFromDB } from '../../firebaseFunctions/fetchingFunctions';
 
 const BrowseRoutes = ({ navigation }) => {
     let [selectedGymID, setGymID] = useState('');
@@ -11,11 +11,17 @@ const BrowseRoutes = ({ navigation }) => {
     let [gymSelected, setGymSelected] = useState(false);
     let [routes, setRoutes] = useState([]);
     let [selectedRouteID, setRouteID] = useState('');
+    const [userInfo, setUserInfo] = useState(''); 
     const handleGymChange = async (selectedGymID) => {
         setGymID(selectedGymID);
         const data = await fetchAllRoutesFromGym(selectedGymID);
         setRoutes(data);
         setGymSelected(true);
+    };
+    const fetchUserData = async () => {
+        const data = await getBasicUserInfoFromDB();
+        setUserInfo(data);
+        console.log("fetched user: ", data);
     };
     useEffect(() => {
         const fetchGyms = async () => {
@@ -23,6 +29,7 @@ const BrowseRoutes = ({ navigation }) => {
             setGyms(data);
             console.log("fetched gyms: ", data);
         }
+        fetchUserData();
         fetchGyms();
         return () => {
         };
