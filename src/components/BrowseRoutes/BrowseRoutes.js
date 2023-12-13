@@ -11,7 +11,18 @@ const BrowseRoutes = ({ navigation }) => {
     let [gymSelected, setGymSelected] = useState(false);
     let [routes, setRoutes] = useState([]);
     let [selectedRouteID, setRouteID] = useState('');
-    const [userInfo, setUserInfo] = useState(''); 
+    const [canAddRoute, setCanAddRoute] = useState(false);
+    const [userInfo, setUserInfo] = useState('');
+    const checkIfUserCanAddRoute = () => {
+        for (role of userInfo.roles) {
+            if (role.role_name === 'admin' || role.role_name === 'setter') {
+                console.log("User can add route");
+                setCanAddRoute(true);
+            }
+        }
+        console.log("User can't add route");
+        setCanAddRoute(false);
+    }
     const handleGymChange = async (selectedGymID) => {
         setGymID(selectedGymID);
         const data = await fetchAllRoutesFromGym(selectedGymID);
@@ -30,6 +41,7 @@ const BrowseRoutes = ({ navigation }) => {
             console.log("fetched gyms: ", data);
         }
         fetchUserData();
+        checkIfUserCanAddRoute();
         fetchGyms();
         return () => {
         };
@@ -85,11 +97,12 @@ const BrowseRoutes = ({ navigation }) => {
                                             ))}
                                         </Column>
                                     </ScrollView>
-                                    <Box>
-                                        <Button style={defaultStyles.buttonDefault}>
-                                            <Text>Add new route</Text>
-                                        </Button>
-                                    </Box>
+                                    {canAddRoute && (
+                                        <Box>
+                                            <Button style={defaultStyles.buttonDefault}>
+                                                <Text>Add new route</Text>
+                                            </Button>
+                                        </Box>)}
                                 </Box>
                             </Center>
                         </Column>
