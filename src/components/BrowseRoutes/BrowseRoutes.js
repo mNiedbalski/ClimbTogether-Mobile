@@ -1,28 +1,33 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { NativeBaseProvider, Text, Box, Row, Column, Center, Button, Select, ScrollView } from 'native-base';
 import defaultStyles from '../../../AppStyles.style';
 import routeSetterPanelStyles from './BrowseRoutes.style';
 import { fetchGymsFromDB, fetchAllRoutesFromGym, getBasicUserInfoFromDB } from '../../firebaseFunctions/fetchingFunctions';
 
+export const checkIfUserCanAddRoute = async (userData) => {
+    console.log("userData", userData);
+    if (userData && userData.roles) {
+        for (const role of userData.roles) {
+            if (role.role_name === 'routesetter' || role.role_name === 'admin') {
+                console.log('User has privileges')
+                return true;
+            }
+        }
+    } else {
+        console.log('User doesnt have privileges')
+        return false;
+    }
+}
 const BrowseRoutes = ({ navigation }) => {
     let [selectedGymID, setGymID] = useState('');
     let [gyms, setGyms] = useState([]);
     let [gymSelected, setGymSelected] = useState(false);
     let [routes, setRoutes] = useState([]);
     let [selectedRouteID, setRouteID] = useState('');
-    const [canAddRoute, setCanAddRoute] = useState(false);
+    const [privilegedGranted, setPrivilegesGranted] = useState(false);
     const [userInfo, setUserInfo] = useState('');
-    const checkIfUserCanAddRoute = () => {
-        for (role of userInfo.roles) {
-            if (role.role_name === 'admin' || role.role_name === 'setter') {
-                console.log("User can add route");
-                setCanAddRoute(true);
-            }
-        }
-        console.log("User can't add route");
-        setCanAddRoute(false);
-    }
+
     const handleGymChange = async (selectedGymID) => {
         setGymID(selectedGymID);
         const data = await fetchAllRoutesFromGym(selectedGymID);
@@ -31,22 +36,25 @@ const BrowseRoutes = ({ navigation }) => {
     };
     const fetchUserData = async () => {
         const data = await getBasicUserInfoFromDB();
-        setUserInfo(data);
-        console.log("fetched user: ", data);
+        return data;
     };
     useEffect(() => {
-        const fetchGyms = async () => {
-            const data = await fetchGymsFromDB();
-            setGyms(data);
-            console.log("fetched gyms: ", data);
-        }
-        fetchUserData();
-        checkIfUserCanAddRoute();
-        fetchGyms();
-        return () => {
+        const fetchData = async () => {
+            const userData = await fetchUserData();
+            const gymsData = await fetchGymsFromDB();
+            setUserInfo(userData);
+            setGyms(gymsData);
         };
-    },
-        [])
+        fetchData();
+    }, []);
+    useEffect(() => {
+        const validate = async () => {
+            const privilegesStatus = await checkIfUserCanAddRoute(userInfo);
+            setPrivilegesGranted(privilegesStatus);
+        };
+        validate();
+    }, [userInfo]);
+
 
     return (
         <NativeBaseProvider>
@@ -55,7 +63,7 @@ const BrowseRoutes = ({ navigation }) => {
                     <Box style={routeSetterPanelStyles.panel}>
                         <Column>
                             <Box style={{ marginTop: '5%', marginLeft: '5%' }}>
-                                <Text fontSize={20}>Modify routes...</Text>
+                                <Text fontSize={20}>Browse routes...</Text>
                             </Box>
                             <Box>
                                 <Select
@@ -97,12 +105,11 @@ const BrowseRoutes = ({ navigation }) => {
                                             ))}
                                         </Column>
                                     </ScrollView>
-                                    {canAddRoute && (
-                                        <Box>
-                                            <Button style={defaultStyles.buttonDefault}>
-                                                <Text>Add new route</Text>
-                                            </Button>
-                                        </Box>)}
+                                    <Box>
+                                        <Button style={defaultStyles.buttonDefault}>
+                                            <Text>Add new route</Text>
+                                        </Button>
+                                    </Box>
                                 </Box>
                             </Center>
                         </Column>
