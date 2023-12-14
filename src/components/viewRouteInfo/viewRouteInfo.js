@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { NativeBaseProvider, Text, Box, Row, Column, Center, Button, Select, ScrollView } from 'native-base';
+import { NativeBaseProvider, Text, Box, Row,Input,  Column, Center, Button, Select, ScrollView } from 'native-base';
 import defaultStyles from '../../../AppStyles.style';
 import routeSetterPanelStyles from '../BrowseRoutes/BrowseRoutes.style'
-import { fetchRouteFromDB } from '../../firebaseFunctions/fetchingFunctions';
+import { fetchRouteFromDB, getBasicUserInfoFromDB} from '../../firebaseFunctions/fetchingFunctions';
 
-import { checkIfUserCanAddRoute, getBasicUserInfoFromDB } from '../BrowseRoutes/BrowseRoutes';
+import { checkIfUserCanAddRoute  } from '../BrowseRoutes/BrowseRoutes';
 
-const ViewRouteInfo = ({ route }) => {
+const ViewRouteInfo = ({ route, navigation }) => {
     const [selectedRoomID, setRoomID] = useState(route.params.roomID);
     const [selectedRouteID, setRouteID] = useState(route.params.routeID);
     const [selectedRoute, setRoute] = useState({});
@@ -50,9 +50,10 @@ const ViewRouteInfo = ({ route }) => {
                                     <Input
                                         placeholder={selectedRoute.difficulty}
                                         value={routeDifficulty}
-                                        onChangeText={setDifficulty}
+                                        onChangeText={setRouteDifficulty}
                                         size="xl"
                                     />
+                                    <Text>Routesetter: {selectedRoute.routeSetter}</Text>
                                     <Box>
                                         <Button>
                                             <Text>Modify route</Text>
@@ -67,7 +68,7 @@ const ViewRouteInfo = ({ route }) => {
                             )}
 
                             <Box>
-                                <Button>
+                                <Button onPress={() => navigation.goBack()}>
                                     <Text>Back</Text>
                                 </Button>
                             </Box>
