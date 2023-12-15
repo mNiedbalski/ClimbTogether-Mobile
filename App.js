@@ -30,7 +30,7 @@ const Stack = createNativeStackNavigator();
 //FIREBASE 
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore';
-import { getBasicUserInfoFromDB } from './src/firebaseFunctions/fetchingFunctions';
+import { getBasicUserInfoFromDB } from './src/databaseFunctions/fetchingFunctions';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC596Q0w1BBOXTPogfEGXORZVo_hLhkwTA",

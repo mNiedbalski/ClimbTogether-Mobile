@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NativeBaseProvider, Text, Box, Row,Input,  Column, Center, Button, Select, ScrollView } from 'native-base';
 import defaultStyles from '../../../AppStyles.style';
 import routeSetterPanelStyles from '../BrowseRoutes/BrowseRoutes.style'
-import { fetchRouteFromDB, getBasicUserInfoFromDB} from '../../firebaseFunctions/fetchingFunctions';
+import { fetchRouteFromDB, getBasicUserInfoFromDB} from '../../databaseFunctions/fetchingFunctions';
 
 import { checkIfUserCanAddRoute  } from '../BrowseRoutes/BrowseRoutes';
 

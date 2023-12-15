@@ -47,7 +47,10 @@ export async function getRouteDifficultyFromDB(routeID, roomID) {
   const routeData = routeSnapshot.data();
   return routeData.difficulty;
 }
+export async function compareRouteDifficulty() {
 
+}
+//DEPRECATED - There is more efficient way to do this by just comparing on the spot
 export async function findMaxDifficultyRoute() {
   const userAttemptsCollectionRef = collection(db, "users", auth.currentUser.uid, "attempts");
   const userAttemptsSnapshot = await getDocs(userAttemptsCollectionRef);
@@ -235,6 +238,7 @@ async function parseUser(userData) {
     weight: userData.weight,
     level: userData.level,
     sex: userData.sex,
+    hardest_difficulty: userData.hardest_difficulty,
     birthday: new Date(userData.birthday.toDate()),
     roles: rolesDataArray,
     achievements: achievementsDataArray,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NativeBaseProvider, Box, Text, Button } from 'native-base';
-import { postAttemptToDB, updateUserExperience, updateUserLevel } from '../../firebaseFunctions/postingFunctions';
-import { getUserExperienceFromDB, getRouteDifficultyFromDB, extractDifficultyValue } from '../../firebaseFunctions/fetchingFunctions';
+import { postAttemptToDB, updateUserExperience, updateUserLevel } from '../../databaseFunctions/postingFunctions';
+import { getUserExperienceFromDB, getRouteDifficultyFromDB, extractDifficultyValue } from '../../databaseFunctions/fetchingFunctions';
 
 const calculateUserExperienceAndUpdate = async (checkedRoomID, checkedRouteID ) => {
   let userExperience = await getUserExperienceFromDB();

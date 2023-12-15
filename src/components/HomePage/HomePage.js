@@ -2,21 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { NativeBaseProvider, Text, Box, Row, Column, Center, Button } from 'native-base';
 import homePageStyles from './HomePage.style';
 import defaultStyles from '../../../AppStyles.style';
-import { getBasicUserInfoFromDB, getRoutesCompletedCountFromDB, findMaxDifficultyRoute } from '../../firebaseFunctions/fetchingFunctions';
+import { getBasicUserInfoFromDB, getRoutesCompletedCountFromDB } from '../../databaseFunctions/fetchingFunctions';
+import { parseUserExp } from './HomePageFunctions';
 //TODO: Add loading indicator if data hasnt been loaded yet
 //TODO: Add user profile pictures
 const HomePage = ({ navigation }) => {
     const [user, setUser] = useState({});
     const [attemptsFinished, setAttemptsFinished] = useState(0);
-    const [maxDifficultyRoute, setMaxDifficultyRoute] = useState(0);
-
     const fetchAttemptsInfo = async () => {
         const amountOfAttemptsFinished = await getRoutesCompletedCountFromDB();
         setAttemptsFinished(amountOfAttemptsFinished);
-    };
-    const fetchHardestRouteInfo = async () => {
-        const hardestRoute = await findMaxDifficultyRoute();
-        setMaxDifficultyRoute(hardestRoute);
     };
     const fetchUser = async () => {
         const loadedUser = await getBasicUserInfoFromDB();
@@ -25,7 +20,6 @@ const HomePage = ({ navigation }) => {
     useEffect(() => {
         fetchUser();
         fetchAttemptsInfo();
-        fetchHardestRouteInfo();
     }, []);
     useEffect(() => {
         console.log(user);
@@ -66,7 +60,9 @@ const HomePage = ({ navigation }) => {
                         <Box style={{ width: '95%', height: '10%', backgroundColor: '#FDFCEC', marginLeft: 'auto', marginRight: 'auto', borderRadius: 10, justifyContent: 'center' }}>
                             <Box style={{ width: `${user.experience_points * 10}%`, backgroundColor: '#424242', height: '100%', borderRadius: 10, justifyContent: 'center' }}>
                                 <Center>
-                                    <Text fontSize={20} color={'white'} >{user.experience_points}0%</Text>
+                                    <Text fontSize={20} color={'white'} >
+                                        {parseUserExp(user.experience_points)}
+                                    </Text>
                                 </Center>
                             </Box>
                         </Box>
@@ -84,14 +80,14 @@ const HomePage = ({ navigation }) => {
                                     <Text> Max difficulty completed: </Text>
                                 </Box>
                                 <Box style={homePageStyles.statField}>
-                                    <Text> {maxDifficultyRoute.difficulty}</Text>
+                                    <Text> {user.hardest_difficulty}</Text>
                                 </Box>
                             </Column>
                         </Row>
                     </Column>
                 </Box>
                 <Button
-                  onPress={() => navigation.navigate('Route Setter Panel')}  
+                    onPress={() => navigation.navigate('Route Setter Panel')}
                 >Routesetter panel</Button>
             </Box>
 

@@ -3,7 +3,7 @@ import React, { useEffect, useReducer, useState } from 'react';
 import { NativeBaseProvider, Text, Box, Row, Column, Center, Button, Select, ScrollView } from 'native-base';
 import defaultStyles from '../../../AppStyles.style';
 import routeSetterPanelStyles from './BrowseRoutes.style';
-import { fetchGymsFromDB, fetchAllRoutesFromGym, getBasicUserInfoFromDB } from '../../firebaseFunctions/fetchingFunctions';
+import { fetchGymsFromDB, fetchAllRoutesFromGym, getBasicUserInfoFromDB } from '../../databaseFunctions/fetchingFunctions';
 
 export const checkIfUserCanAddRoute = async (userData) => {
     console.log("userData", userData);

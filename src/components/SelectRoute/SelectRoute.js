@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NativeBaseProvider, Box, Button, Column, Select } from 'native-base';
 import recordClimbingStyles from './SelectRoute.style';
 
-import { fetchGymsFromDB, fetchRoomsFromDB, fetchRoutesFromDB } from '../../firebaseFunctions/fetchingFunctions';
+import { fetchGymsFromDB, fetchRoomsFromDB, fetchRoutesFromDB } from '../../databaseFunctions/fetchingFunctions';
 
 const SelectRoute = ({ navigation }) => {
   let [gyms, setGyms] = useState([]);
