@@ -1,28 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { NativeBaseProvider, Box, Text, Button } from 'native-base';
 import { postAttemptToDB, updateUserExperience, updateUserLevel } from '../../databaseFunctions/postingFunctions';
-import { getUserExperienceFromDB, getRouteDifficultyFromDB, extractDifficultyValue } from '../../databaseFunctions/fetchingFunctions';
-
-const calculateUserExperienceAndUpdate = async (checkedRoomID, checkedRouteID ) => {
-  let userExperience = await getUserExperienceFromDB();
-  const completedRouteDifficulty = await getRouteDifficultyFromDB(checkedRouteID, checkedRoomID);
-  const expPoints = extractDifficultyValue(completedRouteDifficulty);
-  if (userExperience + expPoints >= 10) {
-    updateUserLevel();
-    userExperience = userExperience + expPoints - 10;
-    updateUserExperience(userExperience);
-  }
-  else {
-    userExperience = expPoints;
-    updateUserExperience(userExperience);
-  }
-}
+import { calculateUserExperienceAndUpdate, updateRouteDifficulty, fetchRoute } from './RecordClimbingFunctions';
 
 
 const RecordClimbing = ({ route }) => {
-  const [gymID, setGymID] = useState(route.params.gymID); 
-  const [roomID, setRoomID] = useState(route.params.roomID); 
-  const [routeID, setRouteID] = useState(route.params.routeID); 
+  const [gymID, setGymID] = useState(route.params.gymID);
+  const [roomID, setRoomID] = useState(route.params.roomID);
+  const [routeID, setRouteID] = useState(route.params.routeID);
+  const [routeAttempted, setRouteAttempted] = useState({});
   const [selectedRoute, setSelectedRoute] = useState({});
   const [timerStarted, setTimerStarted] = useState(false);
   const [timerStopped, setTimerStopped] = useState(false);
@@ -44,8 +30,8 @@ const RecordClimbing = ({ route }) => {
     }
     await postAttemptToDB(attemptDocData, roomID, routeID);
     await calculateUserExperienceAndUpdate(roomID, routeID);
-};
-
+    await updateRouteDifficulty(roomID, routeID);
+  };
   const startTimer = () => {
     setTimerStarted(true);
     setTimerStopped(false);
@@ -53,12 +39,11 @@ const RecordClimbing = ({ route }) => {
     setTopReached(false);
     setElapsedTime(0);
   };
-
   const stopTimer = () => {
     setTimerStopped(true);
     createNewAttempt(elapsedTime, zoneReached, topReached);
+    restartRecording();
   };
-
   const handleZoneReached = () => {
     setZoneReached(true);
   };
@@ -76,16 +61,16 @@ const RecordClimbing = ({ route }) => {
     setElapsedTime(0);
   };
   useEffect(() => {
-    console.log("routes.attempts updated:", selectedRoute.attempts);
-  }, [selectedRoute]);
-  useEffect(() => {
     console.log("zoneReached updated:", zoneReached);
   }, [zoneReached]);
 
   useEffect(() => {
     console.log("topReached updated:", topReached);
   }, [topReached]);
-
+  useEffect(() => {
+    const fetchedRoute = fetchRoute(route.params.roomID, route.params.routeID);
+    setRouteAttempted(fetchedRoute);
+  },[]);
 
   useEffect(() => {
     let timeout;
@@ -107,23 +92,27 @@ const RecordClimbing = ({ route }) => {
     <NativeBaseProvider>
       <Box style={{ marginTop: '30%' }}>
         {!timerStarted && (
-          <Button onPress={startTimer}>Start Timer</Button>
+          <Box>
+            <Text>Route ID: {routeAttempted.name}</Text>
+            <Text>Difficulty: {routeAttempted.difficulty}</Text>
+            <Text>Routesetter: {routeAttempted.routeSetter} </Text>
+            <Button onPress={startTimer}>Start Timer</Button>
+          </Box>
         )}
-
         {timerStarted && !timerStopped && (
-          <>
+          <Box>
             <Button onPress={stopTimer}>Stop</Button>
             <Button onPress={handleZoneReached}>Zone Reached</Button>
             <Button onPress={handleTopReached}>Top Reached</Button>
-          </>
+          </Box>
         )}
         {topReached && (
-          <>
+          <Box>
             <Text>Elapsed Time: {formatTime(elapsedTime)} s</Text>
             <Text>Parameters of attempt:</Text>
             <Button onPress={restartRecording}>Retry</Button>
             <Button>Go back</Button>
-          </>
+         </Box> 
         )}
       </Box>
     </NativeBaseProvider>

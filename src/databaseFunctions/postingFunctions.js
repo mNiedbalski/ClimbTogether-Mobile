@@ -36,3 +36,11 @@ export async function updateUserExperience(userExperience) {
   await updateDoc(userRef, userData);
   console.log("Document written with ID: ", userRef.id);
 }
+export async function updateUserHardestDifficultyInDB (difficulty){
+  const userRef = doc(db, "users", auth.currentUser.uid);
+  const userData = {
+      hardest_difficulty: difficulty,
+  }
+  await updateDoc(userRef, userData);
+  console.log("Document written with ID: ", userRef.id);
+}
