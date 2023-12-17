@@ -11,6 +11,7 @@ import RecordClimbing from './src/components/RecordClimbing/RecordClimbing';
 import SignInPage from './src/components/SignInPage/SignInPage';
 import BrowseRoutes from './src/components/BrowseRoutes/BrowseRoutes';
 import ViewRouteInfo from './src/components/viewRouteInfo/viewRouteInfo';
+import EditProfile from './src/components/EditProfile/EditProfile';
 
 import styles from './AppStyles.style';
 import { Entypo } from '@expo/vector-icons';
@@ -104,8 +105,8 @@ export default function App() {
             initialRouteName="Navigate To Different Panels"
           >
             <Tab.Screen
-              name="Settings"
-              component={Settings}
+              name="Edit Profile"
+              component={EditProfile}
               options={{
                 tabBarIcon: ({ focused }) => (
                   <Ionicons name="stats-chart" size={45} color='#424242' />

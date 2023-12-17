@@ -1,7 +1,6 @@
 import { auth, db } from '../../App';
 //import { getDoc,getDocs, doc, collection } from 'firebase/firestore/lite'; //Lite version, but I need more powerful queries
 import { getDoc, getDocs, doc, collection, query, where, getCountFromServer } from 'firebase/firestore';
-import { User } from '../Entities/user';
 import { Achievement } from '../Entities/achievement';
 import { Role } from '../Entities/role';
 
@@ -22,6 +21,7 @@ async function parseRoute(routeData, routeID) {
   };
   return routeInfo;
 }
+
 export async function fetchRouteSetterNameFromDB(routeData) {
   if (routeData && routeData.routesetter) {
     const routesetterSnapshot = await getDoc(routeData.routesetter);
