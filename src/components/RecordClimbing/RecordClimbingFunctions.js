@@ -20,8 +20,10 @@ export const calculateUserExperienceAndUpdate = async (checkedRoomID, checkedRou
 export const updateRouteDifficulty = async (roomID, routeID) => {
     const route = await fetchRouteFromDB(roomID, routeID);
     const routeDifficultyExtracted = extractDifficultyValue(route.difficulty);
+    console.log("Route difficulty extracted: ", routeDifficultyExtracted);
     const user = await getBasicUserInfoFromDB();
-    const userDifficultyExtracted = extractDifficultyValue(user.difficulty);
+    const userDifficultyExtracted = extractDifficultyValue(user.hardest_difficulty);
+    console.log("User difficulty extracted: ", userDifficultyExtracted)
     if (userDifficultyExtracted < routeDifficultyExtracted) {
       updateUserHardestDifficultyInDB(route.difficulty);
     }

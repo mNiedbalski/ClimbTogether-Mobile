@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { NativeBaseProvider, Box, Text, Button } from 'native-base';
+import { NativeBaseProvider, Box, Text, Button, Column } from 'native-base';
 import { postAttemptToDB, updateUserExperience, updateUserLevel } from '../../databaseFunctions/postingFunctions';
 import { calculateUserExperienceAndUpdate, updateRouteDifficulty, fetchRoute } from './RecordClimbingFunctions';
+import { fetchRouteFromDB } from '../../databaseFunctions/fetchingFunctions';
 
 
-const RecordClimbing = ({ route }) => {
+const RecordClimbing = ({ route, navigation }) => {
   const [gymID, setGymID] = useState(route.params.gymID);
   const [roomID, setRoomID] = useState(route.params.roomID);
   const [routeID, setRouteID] = useState(route.params.routeID);
@@ -29,7 +30,8 @@ const RecordClimbing = ({ route }) => {
       top_reached: wasTopReached,
     }
     await postAttemptToDB(attemptDocData, roomID, routeID);
-    await calculateUserExperienceAndUpdate(roomID, routeID);
+    if (wasTopReached)
+      await calculateUserExperienceAndUpdate(roomID, routeID);
     await updateRouteDifficulty(roomID, routeID);
   };
   const startTimer = () => {
@@ -51,7 +53,7 @@ const RecordClimbing = ({ route }) => {
   const handleTopReached = () => {
     setTimerStopped(true);
     createNewAttempt(elapsedTime, true, true);
-    restartRecording();
+    setTopReached(true);
   };
   const restartRecording = () => {
     setTimerStarted(false);
@@ -68,9 +70,12 @@ const RecordClimbing = ({ route }) => {
     console.log("topReached updated:", topReached);
   }, [topReached]);
   useEffect(() => {
-    const fetchedRoute = fetchRoute(route.params.roomID, route.params.routeID);
-    setRouteAttempted(fetchedRoute);
-  },[]);
+    const fetchData = async () => {
+      const routeFetched = await fetchRouteFromDB(roomID, routeID);
+      setRouteAttempted(routeFetched);
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     let timeout;
@@ -93,10 +98,14 @@ const RecordClimbing = ({ route }) => {
       <Box style={{ marginTop: '30%' }}>
         {!timerStarted && (
           <Box>
-            <Text>Route ID: {routeAttempted.name}</Text>
-            <Text>Difficulty: {routeAttempted.difficulty}</Text>
-            <Text>Routesetter: {routeAttempted.routeSetter} </Text>
-            <Button onPress={startTimer}>Start Timer</Button>
+            <Column space={3}>
+              <Text>Route ID: {routeAttempted.name}</Text>
+              <Text>Difficulty: {routeAttempted.difficulty}</Text>
+              <Text>Routesetter: {routeAttempted.routeSetter} </Text>
+              <Button onPress={startTimer}>Start Timer</Button>
+              <Button onPress={() => navigation.goBack()}>Go back</Button>
+            </Column>
+
           </Box>
         )}
         {timerStarted && !timerStopped && (
@@ -109,10 +118,9 @@ const RecordClimbing = ({ route }) => {
         {topReached && (
           <Box>
             <Text>Elapsed Time: {formatTime(elapsedTime)} s</Text>
-            <Text>Parameters of attempt:</Text>
             <Button onPress={restartRecording}>Retry</Button>
-            <Button>Go back</Button>
-         </Box> 
+            <Button onPress={() => navigation.goBack()}>Go back</Button>
+          </Box>
         )}
       </Box>
     </NativeBaseProvider>

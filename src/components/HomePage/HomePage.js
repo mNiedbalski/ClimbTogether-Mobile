@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { NativeBaseProvider, Text, Box, Row, Column, Center, Button } from 'native-base';
+import { useFocusEffect } from '@react-navigation/native';
 import homePageStyles from './HomePage.style';
 import defaultStyles from '../../../AppStyles.style';
 import { getBasicUserInfoFromDB, getRoutesCompletedCountFromDB } from '../../databaseFunctions/fetchingFunctions';
@@ -9,6 +10,7 @@ import { parseUserExp } from './HomePageFunctions';
 const HomePage = ({ navigation }) => {
     const [user, setUser] = useState({});
     const [attemptsFinished, setAttemptsFinished] = useState(0);
+    const [refreshing, setRefreshing] = useState(false);
     const fetchAttemptsInfo = async () => {
         const amountOfAttemptsFinished = await getRoutesCompletedCountFromDB();
         setAttemptsFinished(amountOfAttemptsFinished);
@@ -17,10 +19,15 @@ const HomePage = ({ navigation }) => {
         const loadedUser = await getBasicUserInfoFromDB();
         setUser(loadedUser);
     };
-    useEffect(() => {
+    const fetchData = () => {
         fetchUser();
         fetchAttemptsInfo();
-    }, []);
+    }
+    useFocusEffect(
+        useCallback(() => {
+          fetchData();
+        }, [])
+      );
     useEffect(() => {
         console.log(user);
     }, [user]);
