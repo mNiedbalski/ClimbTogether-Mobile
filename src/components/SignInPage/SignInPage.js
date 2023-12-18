@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput } from 'react-native';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { NativeBaseProvider, Box, Text, Input, Button } from 'native-base';
+import { NativeBaseProvider, Box, Text, Input, Button, Image } from 'native-base';
 import { auth } from '../../../App'
 import AppStyles from '../../../AppStyles.style';
 import signInPageStyles from './SignInPage.style';
@@ -45,6 +45,10 @@ const SignInPage = ({ setUserLoggedIn }) => {
             <Box style={AppStyles.componentWrapper}>
                 <Box style={AppStyles.defaultContainer}>
                     <Box style={signInPageStyles.logoPlaceholder} >
+                        <Image
+                            source={require('../../../assets/logo.png')}
+                            style={{ width: '85%', height: '100%' }}
+                        />
                     </Box>
                     {!noAccount ? (
                         <Box style={{ height: '62.5%' }}>
