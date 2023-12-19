@@ -221,13 +221,14 @@ async function parseUser(userData) {
     return new Role(roleRef.id, roleData.role_name);
   });
   const rolesDataArray = await Promise.all(rolesDataPromises);
-
-  const achievementsDataPromises = userData.achievements.map(async (achievementRef) => {
+  console.log("rolesDataArray",rolesDataArray);
+  /*const achievementsDataPromises = userData.achievements.map(async (achievementRef) => {
     const achievementDoc = await getDoc(achievementRef);
     const achievementData = achievementDoc.data();
     return new Achievement(achievementRef.id, achievementData.name, achievementData.criteria, new Date(achievementData.date_acquired.toDate()));
   });
   const achievementsDataArray = await Promise.all(achievementsDataPromises);
+  console.log("achievementsDataArray",achievementsDataArray)*/
   const parsedUser = {
     id: auth.currentUser.uid,
     name: userData.name,
@@ -240,7 +241,8 @@ async function parseUser(userData) {
     hardest_difficulty: userData.hardest_difficulty,
     birthday: new Date(userData.birthday.toDate()),
     roles: rolesDataArray,
-    achievements: achievementsDataArray,
+    //achievements: achievementsDataArray, not needed, but it should be user subcollection
   };
+  console.log("parsedUser",parsedUser);
   return parsedUser;
 }
