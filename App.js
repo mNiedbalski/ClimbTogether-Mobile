@@ -4,6 +4,7 @@ import { NativeBaseProvider, Box } from 'native-base';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
+import SetupProfile from './src/components/SetupProfile/SetupProfile';
 import HomePage from './src/components/HomePage/HomePage';
 import SelectRoute from './src/components/SelectRoute/SelectRoute';
 import Settings from './src/components/Settings/Settings';
@@ -58,8 +59,8 @@ export function NavigateToRouteRecording() {
     </Stack.Navigator>
   )
 }
-export function NavigateToDifferentPanels(){
-  return(
+export function NavigateToDifferentPanels() {
+  return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
@@ -116,7 +117,6 @@ export default function App() {
             <Tab.Screen
               name="Record Climbing Navigation"
               component={NavigateToRouteRecording}
-              initialParams={{ user: user }}
               options={{
                 tabBarIcon: ({ focused }) => (
                   <AntDesign name="play" size={60} color='#424242' />
@@ -126,13 +126,17 @@ export default function App() {
             <Tab.Screen
               name="Navigate To Different Panels"
               component={NavigateToDifferentPanels}
-              initialParams={{ user: user }}
               options={{
                 tabBarIcon: ({ focused }) => (
                   <Entypo name="home" size={50} color='#424242' />
                 ),
               }}
             />
+            <Tab.Screen
+              name="test setup"
+              component={SetupProfile}
+            />
+
           </Tab.Navigator>
         ) : (
           <SignInPage setUserLoggedIn={setUserLoggedIn} />
