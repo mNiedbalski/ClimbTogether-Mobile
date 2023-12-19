@@ -5,7 +5,7 @@ import { NativeBaseProvider, Box, Text, Input, Button, Image } from 'native-base
 import { auth } from '../../../App'
 import AppStyles from '../../../AppStyles.style';
 import signInPageStyles from './SignInPage.style';
-const SignInPage = ({ setUserLoggedIn }) => {
+const SignInPage = ({ setUserLoggedIn , setUserSignUp }) => {
     const [email, setEmail] = useState("ghex@gmail.com"); //TEST
     const [password, setPassword] = useState("secretPassword");
     let [noAccount, setNoAccount] = useState(false);
@@ -30,7 +30,7 @@ const SignInPage = ({ setUserLoggedIn }) => {
     const handleSignUp = async () => {
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                setUserLoggedIn(true);
+                setUserSignUp(true);
             })
             .catch((error) => {
                 const errorCode = error.code;

@@ -3,7 +3,9 @@ import { Box, Input, FormControl, NativeBaseProvider, Select, Button, Text, Colu
 import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import defaultStyles from '../../../AppStyles.style';
-const SetupProfile = () => {
+import { postData } from './SetupProfileFunctions';
+import { postNewUserToDatabase } from '../../databaseFunctions/postingFunctions';
+const SetupProfile = ({setUserLoggedIn}) => {
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [height, setHeight] = useState();
@@ -23,6 +25,10 @@ const SetupProfile = () => {
         setBirthday(date);
         hideDatePicker();
     };
+    const handleSaveProfile = async () => {
+        await postNewUserToDatabase(name,surname,height,weight,sex,birthday);
+        setUserLoggedIn(true);
+    };
     useEffect(() => {
         setIsFormValid(
             name && name.trim() !== '' &&
@@ -35,9 +41,7 @@ const SetupProfile = () => {
     useEffect(() => {
         console.log("birthday", birthday);
     }, [birthday]);
-    const handleSaveProfile = () => {
-        // Handle saving the profile data
-    };
+
 
     return (
         <NativeBaseProvider>

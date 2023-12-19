@@ -214,6 +214,7 @@ export async function getBasicUserInfoFromDB() {
   return fetchedUser;
 }
 async function parseUser(userData) {
+  console.log("userData",userData);
   const rolesDataPromises = userData.roles.map(async (roleRef) => {
     const roleDoc = await getDoc(roleRef);
     const roleData = roleDoc.data();

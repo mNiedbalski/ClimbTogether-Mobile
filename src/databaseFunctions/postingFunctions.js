@@ -44,3 +44,28 @@ export async function updateUserHardestDifficultyInDB (difficulty){
   await updateDoc(userRef, userData);
   console.log("Document written with ID: ", userRef.id);
 }
+export async function postNewUserToDatabase(postedName,postedSurname,postedHeight,postedWeight,postedSex,postedBirthday){
+  const roleDocRef = doc(db, "roles", "userRole");
+  let postedRoles = [roleDocRef];
+  const userData = {
+    name: postedName,
+    surname: postedSurname,
+    height: postedHeight,
+    weight: postedWeight,
+    sex: postedSex,
+    birthday: postedBirthday,
+    level: 0,
+    experience_points: 0,
+    hardest_difficulty: "V0",
+    roles: postedRoles,
+  }
+  const usersCollectionRef = collection(db, "users");
+  try {
+    const newUserDoc = doc(usersCollectionRef, auth.currentUser.uid);
+    await setDoc(newUserDoc, userData, {merge: true});
+    console.log("Document written with ID: ", newUserDoc.id);
+  } catch (error){
+    console.error('Error adding document:', error);
+  } 
+
+}

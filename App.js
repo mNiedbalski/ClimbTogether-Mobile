@@ -76,6 +76,7 @@ export function NavigateToDifferentPanels() {
 
 export default function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
+  const [userSignUp, setUserSignUp] = useState(false);
   const [user, setUser] = useState({});
 
 
@@ -132,14 +133,11 @@ export default function App() {
                 ),
               }}
             />
-            <Tab.Screen
-              name="test setup"
-              component={SetupProfile}
-            />
-
           </Tab.Navigator>
+        ) : userSignUp ? (
+          <SetupProfile setUserLoggedIn={setUserLoggedIn} />
         ) : (
-          <SignInPage setUserLoggedIn={setUserLoggedIn} />
+          <SignInPage setUserLoggedIn={setUserLoggedIn} setUserSignUp={setUserSignUp} />
         )}
       </NativeBaseProvider>
     </NavigationContainer>
