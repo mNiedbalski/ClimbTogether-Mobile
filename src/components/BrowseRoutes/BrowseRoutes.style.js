@@ -14,6 +14,7 @@ const routeSetterPanelStyles = StyleSheet.create({
     height: '80%',
     width: '90%',
     backgroundColor: '#FDFCEC',
+    borderRadius: 20
   },
   scrollViewElement: {
     width: '100%',

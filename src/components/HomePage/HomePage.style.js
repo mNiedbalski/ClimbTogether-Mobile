@@ -7,7 +7,7 @@ const homePageStyles = StyleSheet.create({
   //Black: #0D0706
   //width: `${experiencePercentage}%`,
     statsPanel: {
-      height: '85%',
+      height: '80%',
       width: '85%',
       marginLeft: 'auto',
       marginRight: 'auto',

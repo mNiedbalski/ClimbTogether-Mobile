@@ -62,56 +62,53 @@ const BrowseRoutes = ({ navigation }) => {
                 <Box style={[defaultStyles.defaultContainer, { height: '85%', marginTop: 0 }]}>
                     <Box style={routeSetterPanelStyles.panel}>
                         <Column>
-                            <Box style={{ marginTop: '5%', marginLeft: '5%' }}>
-                                <Text fontSize={20}>Browse routes...</Text>
-                            </Box>
-                            <Box>
-                                <Select
-                                    placeholder='Select a gym'
-                                    selectedValue={selectedGymID}
-                                    onValueChange={handleGymChange}
-                                    placeholderTextColor='#424242'
-                                >
-                                    {gyms ? (
-                                        gyms.map((gym) => (
-                                            <Select.Item label={gym.name} value={gym.id} key={gym.id} />
-                                        ))
-                                    ) : (
-                                        <Select.Item label="No gym selected" value={null} />
-                                    )}
-                                </Select>
-                            </Box>
+                            <Center>
+                                <Box style={{ marginTop: '10%', width: '80%' }}>
+                                    <Select
+                                        placeholder='Select a gym'
+                                        selectedValue={selectedGymID}
+                                        onValueChange={handleGymChange}
+                                        placeholderTextColor='#424242'
+                                        size="xl"
+                                        bg="#FDFCEC"
+                                    >
+                                        {gyms ? (
+                                            gyms.map((gym) => (
+                                                <Select.Item label={gym.name} value={gym.id} key={gym.id} />
+                                            ))
+                                        ) : (
+                                            <Select.Item label="No gym selected" value={null} />
+                                        )}
+                                    </Select>
+                                </Box>
+                            </Center>
                             <Center>
                                 <Box style={routeSetterPanelStyles.scrollView}>
-                                    <Text>Search route</Text>
                                     <ScrollView>
                                         <Column space={3}>
                                             {routes.map((route) => (
                                                 <Box style={routeSetterPanelStyles.scrollViewElement} key={route.id}>
-                                                    <Row space={6}>
-                                                        <Box style={routeSetterPanelStyles.dot} />
-                                                        <Box>
-                                                            <Button
-                                                                style={routeSetterPanelStyles.routeButton}
-                                                                onPress={() => navigation.navigate('View Route Info', { routeID: route.id, roomID: route.roomID })}
-                                                            >
-                                                                <Box>
-                                                                    <Text >{route.name}</Text>
-                                                                </Box>
-                                                            </Button>
-                                                        </Box>
-                                                    </Row>
+                                                    <Box>
+                                                        <Button
+                                                            style={routeSetterPanelStyles.routeButton}
+                                                            onPress={() => navigation.navigate('View Route Info', { routeID: route.id, roomID: route.roomID })}
+                                                        >
+                                                            <Box>
+                                                                <Text >{route.name}</Text>
+                                                            </Box>
+                                                        </Button>
+                                                    </Box>
                                                 </Box>
                                             ))}
                                         </Column>
                                     </ScrollView>
-                                    <Box>
-                                        <Button style={defaultStyles.buttonDefault}>
-                                            <Text>Add new route</Text>
-                                        </Button>
-                                    </Box>
                                 </Box>
                             </Center>
+                            <Box>
+                                <Button style={[defaultStyles.defaultButton]}>
+                                    <Text color="red">Add new route</Text>
+                                </Button>
+                            </Box>
                         </Column>
                     </Box>
                 </Box>

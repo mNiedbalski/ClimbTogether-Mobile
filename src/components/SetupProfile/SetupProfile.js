@@ -3,7 +3,6 @@ import { Box, Input, FormControl, NativeBaseProvider, Select, Button, Text, Colu
 import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import defaultStyles from '../../../AppStyles.style';
-import { postData } from './SetupProfileFunctions';
 import { postNewUserToDatabase } from '../../databaseFunctions/postingFunctions';
 const SetupProfile = ({setUserLoggedIn}) => {
     const [name, setName] = useState('');
@@ -114,7 +113,7 @@ const SetupProfile = ({setUserLoggedIn}) => {
                                 onCancel={hideDatePicker}
                             />
                             <Box style={{ marginTop: '10%' }}>
-                                <Button onPress={handleSaveProfile} isDisabled={!isFormValid}>
+                                <Button onPress={handleSaveProfile} isDisabled={!isFormValid} style={defaultStyles.defaultButton}>
                                     <Text>Save Profile</Text>
                                 </Button>
                             </Box>

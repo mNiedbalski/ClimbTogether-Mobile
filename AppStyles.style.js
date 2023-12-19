@@ -22,9 +22,8 @@ const defaultStyles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#FDFCEC',
   },
-  buttonDefault:{
+  defaultButton:{
     backgroundColor: '#424242',
-    color: '#FDFCEC',
   }
 });
 

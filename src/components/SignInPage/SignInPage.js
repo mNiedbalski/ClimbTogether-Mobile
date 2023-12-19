@@ -73,14 +73,14 @@ const SignInPage = ({ setUserLoggedIn , setUserSignUp }) => {
                             </Box>
                             <Box style={signInPageStyles.buttonsSectionContainer}>
                                 <Box>
-                                    <Button style={AppStyles.buttonDefault}
+                                    <Button style={AppStyles.defaultButton}
                                         onPress={handleSignIn}
                                     >
                                         Sign In
                                     </Button>
                                 </Box>
                                 <Box style={{ marginTop: '5%' }}>
-                                    <Button style={AppStyles.buttonDefault}
+                                    <Button style={AppStyles.defaultButton}
                                         onPress={switchSignInSignUp}>
                                         No account?
                                     </Button>
@@ -111,14 +111,14 @@ const SignInPage = ({ setUserLoggedIn , setUserSignUp }) => {
                             </Box>
                             <Box style={signInPageStyles.buttonsSectionContainer}>
                                 <Box>
-                                    <Button style={AppStyles.buttonDefault}
+                                    <Button style={AppStyles.defaultButton}
                                         onPress={handleSignUp}
                                     >
                                         Sign Up
                                     </Button>
                                 </Box>
                                 <Box style={{ marginTop: '5%' }}>
-                                    <Button style={AppStyles.buttonDefault}
+                                    <Button style={AppStyles.defaultButton}
                                         onPress={switchSignInSignUp}>
                                         Go back
                                     </Button>

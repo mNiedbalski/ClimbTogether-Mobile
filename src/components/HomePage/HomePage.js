@@ -25,9 +25,9 @@ const HomePage = ({ navigation }) => {
     }
     useFocusEffect(
         useCallback(() => {
-          fetchData();
+            fetchData();
         }, [])
-      );
+    );
     useEffect(() => {
         console.log(user);
     }, [user]);
@@ -35,6 +35,9 @@ const HomePage = ({ navigation }) => {
     return (
         <NativeBaseProvider>
             <Box style={defaultStyles.componentWrapper}>
+                <Box>
+
+                </Box>
                 <Box style={homePageStyles.statsPanel}>
                     <Column space={2}>
                         <Box style={{ marginTop: '5%', height: '45%' }}>
@@ -93,9 +96,12 @@ const HomePage = ({ navigation }) => {
                         </Row>
                     </Column>
                 </Box>
-                <Button
-                    onPress={() => navigation.navigate('Route Setter Panel')}
-                >Routesetter panel</Button>
+                <Center>
+                    <Button style={[defaultStyles.defaultButton, { marginTop: '5%', width: '85%' }]}
+                        onPress={() => navigation.navigate('Route Setter Panel')}
+                    >Browse Routes</Button>
+                </Center>
+
             </Box>
 
         </NativeBaseProvider>

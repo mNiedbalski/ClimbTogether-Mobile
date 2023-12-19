@@ -2,24 +2,15 @@ import { StyleSheet, Dimensions } from 'react-native';
 
 const recordClimbingStyles = StyleSheet.create({
     buttonContainer: {
-      height: '75%',
-      width: '85%',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      marginTop: '30%',
+      height: '50%',
+      width: '100%',
       backgroundColor: '#EEB959',
       borderRadius: 20,
+      justifyContent: 'center',
     },
     selectWrapper:{
-      height: '33%',
-      paddingTop: '30%'
+      width: '80%'
     },
-    select: {
-        backgroundColor: '#FDFCEC',
-        fontSize: 21,
-        borderColor: '#FDFCEC',
-        borderRadius: 20,
-    }
   });
   
   export default recordClimbingStyles;
