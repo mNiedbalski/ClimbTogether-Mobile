@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { NativeBaseProvider, Text, Box, Row,Input,  Column, Center, Button, Select, ScrollView } from 'native-base';
+import { NativeBaseProvider, Text, Box, Row, Input, Column, Center, Button, Select, ScrollView } from 'native-base';
 import defaultStyles from '../../../AppStyles.style';
 import routeSetterPanelStyles from '../BrowseRoutes/BrowseRoutes.style'
-import { fetchRouteFromDB, getBasicUserInfoFromDB} from '../../databaseFunctions/fetchingFunctions';
-
-import { checkIfUserCanAddRoute  } from '../BrowseRoutes/BrowseRoutes';
+import { fetchRouteFromDB, getBasicUserInfoFromDB } from '../../databaseFunctions/fetchingFunctions';
+import { handleModify } from './viewRouteInfoFunctions';
+import { checkIfUserCanAddRoute } from '../BrowseRoutes/BrowseRoutes';
 
 const ViewRouteInfo = ({ route, navigation }) => {
     const [selectedRoomID, setRoomID] = useState(route.params.roomID);
@@ -12,12 +12,13 @@ const ViewRouteInfo = ({ route, navigation }) => {
     const [selectedRoute, setRoute] = useState({});
     const [privilegesGranted, setPrivilegesGranted] = useState(false);
     let [routeName, setRouteName] = useState('');
-    let [routeDifficulty, setRouteDifficulty] = useState('');
     fetchData = async () => {
-        const data = await fetchRouteFromDB(selectedRoomID, selectedRouteID); //Tutaj skonczone, teraz zaladowac do route i wyswietlic fajnie
+        const data = await fetchRouteFromDB(selectedRoomID, selectedRouteID);
         const userData = await getBasicUserInfoFromDB();
         setRoute(data);
         setPrivilegesGranted(checkIfUserCanAddRoute(userData));
+        setRouteName(data.name);
+        setRouteDifficulty(data.difficulty);
     };
     useEffect(() => {
         setRoomID(route.params.roomID);
@@ -45,22 +46,21 @@ const ViewRouteInfo = ({ route, navigation }) => {
                                         placeholder={selectedRoute.name}
                                         value={routeName}
                                         onChangeText={setRouteName}
-                                        size="xl"
+                                        size="md"
                                     />
-                                    <Input
-                                        placeholder={selectedRoute.difficulty}
-                                        value={routeDifficulty}
-                                        onChangeText={setRouteDifficulty}
-                                        size="xl"
-                                    />
+                                    <Text>Difficulty: {selectedRoute.difficulty}</Text>
                                     <Text>Routesetter: {selectedRoute.routeSetter}</Text>
                                     <Box>
-                                        <Button>
+                                        <Button
+                                            style={defaultStyles.defaultButton}
+                                            onPress={() => handleModify(selectedRouteID, selectedRoomID, routeName)}
+                                        >
                                             <Text>Modify route</Text>
                                         </Button>
                                     </Box>
                                     <Box>
-                                        <Button>
+                                        <Button
+                                            style={defaultStyles.defaultButton}>
                                             <Text>Delete route</Text>
                                         </Button>
                                     </Box>
@@ -68,7 +68,9 @@ const ViewRouteInfo = ({ route, navigation }) => {
                             )}
 
                             <Box>
-                                <Button onPress={() => navigation.goBack()}>
+                                <Button
+                                    style={defaultStyles.defaultButton}
+                                    onPress={() => navigation.goBack()}>
                                     <Text>Back</Text>
                                 </Button>
                             </Box>
