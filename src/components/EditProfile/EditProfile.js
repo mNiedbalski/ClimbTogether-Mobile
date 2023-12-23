@@ -3,6 +3,7 @@ import { NativeBaseProvider, Spinner, Center, Box, Text, FormControl, Button, Se
 import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { getBasicUserInfoFromDB } from '../../databaseFunctions/fetchingFunctions';
+import { updateUserInDB } from '../../databaseFunctions/userFunctions';
 import defaultStyles from '../../../AppStyles.style';
 const EditProfile = ({ navigation }) => {
     const [user, setUser] = useState({});
@@ -27,7 +28,7 @@ const EditProfile = ({ navigation }) => {
         hideDatePicker();
     };
     const handleSaveChanges = () => {
-        setDoneChanges(true);
+        updateUserInDB(name, surname, height, weight, sex, birthday);
     };
     useEffect(() => {
         const fetchUser = async () => {
@@ -116,7 +117,7 @@ const EditProfile = ({ navigation }) => {
                                     onCancel={hideDatePicker}
                                 />
                                 <Box style={{ marginTop: '10%' }}>
-                                    <Button onPress={handleSaveChanges} isDisabled={!doneChanges} style={defaultStyles.defaultButton}>
+                                    <Button onPress={handleSaveChanges} style={defaultStyles.defaultButton}>
                                         <Text>Save Changes</Text>
                                     </Button>
                                 </Box>
