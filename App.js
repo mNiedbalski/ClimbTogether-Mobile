@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
-import { NativeBaseProvider, Box } from 'native-base';
+import { NativeBaseProvider, Box, Spinner, Center } from 'native-base';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -83,6 +83,7 @@ export default function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [userSignUp, setUserSignUp] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(true);
 
 
   const fetchData = async () => {
@@ -90,6 +91,7 @@ export default function App() {
       const isUserAdmin = await checkIfAdmin();
       console.log("isUserAdmin", isUserAdmin);
       setIsAdmin(isUserAdmin);
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -99,7 +101,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <NativeBaseProvider>
-        {isAdmin ? (
+        {userLoggedIn && isAdmin ? (
           <Tab.Navigator
             screenOptions={{
               tabBarStyle: styles.navigation,
@@ -136,6 +138,13 @@ export default function App() {
               }}
             />
           </Tab.Navigator>
+        ) : loading===true && userLoggedIn===true ? (
+          <Center>
+            <Spinner accessibilityLabel="Loading user info"
+              color="#EEB959"
+              size="lg"
+            />
+          </Center>
         ) : userLoggedIn ? (
           <Tab.Navigator
             screenOptions={{
@@ -174,9 +183,9 @@ export default function App() {
             />
           </Tab.Navigator>
         ) : userSignUp ? (
-          <SetupProfile setUserLoggedIn={setUserLoggedIn} />
+          <SetupProfile setUserLoggedIn={setUserLoggedIn} setLoading={setLoading} />
         ) : (
-          <SignInPage setUserLoggedIn={setUserLoggedIn} setUserSignUp={setUserSignUp} />
+          <SignInPage setUserLoggedIn={setUserLoggedIn} setUserSignUp={setUserSignUp} setLoading={setLoading} />
         )}
       </NativeBaseProvider>
     </NavigationContainer>
