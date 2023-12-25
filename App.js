@@ -9,16 +9,20 @@ import HomePage from './src/components/HomePage/HomePage';
 import SelectRoute from './src/components/SelectRoute/SelectRoute';
 import Settings from './src/components/Settings/Settings';
 import RecordClimbing from './src/components/RecordClimbing/RecordClimbing';
-import SignInPage from './src/components/SignInPage/SignInPage';
+import SignInPage from './src/components/WelcomePage/WelcomePage';
 import BrowseRoutes from './src/components/BrowseRoutes/BrowseRoutes';
 import ViewRouteInfo from './src/components/viewRouteInfo/viewRouteInfo';
 import EditProfile from './src/components/EditProfile/EditProfile';
-
+import AdminGymsPanel from './src/components/AdminGymsPanel/AdminGymsPanel';
+import AdminStaffPanel from './src/components/AdminStaffPanel/AdminStaffPanel';
+import AdminUsersPanel from './src/components/AdminUsersPanel/AdminUsersPanel';
 import styles from './AppStyles.style';
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth';
+import { Feather } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 //Suppresing warnings in app xdd
 import { LogBox } from 'react-native';
@@ -33,6 +37,7 @@ const Stack = createNativeStackNavigator();
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore';
 import { getBasicUserInfoFromDB } from './src/databaseFunctions/fetchingFunctions';
+import { checkIfAdmin } from './src/components/WelcomePage/WelcomePageFunctions';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC596Q0w1BBOXTPogfEGXORZVo_hLhkwTA",
@@ -77,27 +82,61 @@ export function NavigateToDifferentPanels() {
 export default function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [userSignUp, setUserSignUp] = useState(false);
-  const [user, setUser] = useState({});
+  const [isAdmin, setIsAdmin] = useState(false);
 
 
-  const fetchUser = async () => {
+  const fetchData = async () => {
     if (auth.currentUser.uid) {
-      const loadedUser = await getBasicUserInfoFromDB(db);
-      setUser(loadedUser);
+      const isUserAdmin = await checkIfAdmin();
+      console.log("isUserAdmin", isUserAdmin);
+      setIsAdmin(isUserAdmin);
     }
   };
-
   useEffect(() => {
-    console.log(user);
-  }, [user]);
-  useEffect(() => {
-    fetchUser();
+    fetchData();
   }, [userLoggedIn]);
 
   return (
     <NavigationContainer>
       <NativeBaseProvider>
-        {userLoggedIn ? (
+        {isAdmin ? (
+          <Tab.Navigator
+            screenOptions={{
+              tabBarStyle: styles.navigation,
+              tabBarShowLabel: false,
+              headerShown: false,
+            }}
+            initialRouteName="Admin Users Panel"
+          >
+            <Tab.Screen
+              name="Admin Gyms Panel"
+              component={AdminGymsPanel}
+              options={{
+                tabBarIcon: ({ focused }) => (
+                  <FontAwesome5 name="building" size={45} color='#424242' />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Admin Users Panel"
+              component={AdminUsersPanel}
+              options={{
+                tabBarIcon: ({ focused }) => (
+                  <Feather name="users" size={45} color='#424242' />
+                ),
+              }}
+            />
+            <Tab.Screen
+              name="Admin Staff Panel"
+              component={AdminStaffPanel}
+              options={{
+                tabBarIcon: ({ focused }) => (
+                  <FontAwesome5 name="users-cog" size={45} color='#424242' />
+                ),
+              }}
+            />
+          </Tab.Navigator>
+        ) : userLoggedIn ? (
           <Tab.Navigator
             screenOptions={{
               tabBarStyle: styles.navigation,
@@ -111,7 +150,7 @@ export default function App() {
               component={EditProfile}
               options={{
                 tabBarIcon: ({ focused }) => (
-                  <Ionicons name="stats-chart" size={45} color='#424242' />
+                  <AntDesign name="profile" size={45} color='#424242' />
                 ),
               }}
             />

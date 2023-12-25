@@ -1,5 +1,5 @@
 import {auth,db} from '../../App';
-import {runTransaction,collection, addDoc, setDoc, doc, updateDoc, getDoc} from 'firebase/firestore';
+import {runTransaction,collection, addDoc, setDoc, doc, updateDoc, getDoc, getDocs} from 'firebase/firestore';
 
 export async function updateUserInDB(postedName, postedSurname, postedHeight, postedWeight, postedSex, postedBirthday){
     const userData = {
@@ -13,4 +13,11 @@ export async function updateUserInDB(postedName, postedSurname, postedHeight, po
     const userRef = doc(db, "users", auth.currentUser.uid);
     await updateDoc(userRef, userData);
     console.log("Document written with ID: ", userRef.id);
+}
+
+export async function fetchUsersFromDB(){
+    const usersCol = collection(db, 'users');
+    const usersSnapshot = await getDocs(usersCol);
+    const usersList = usersSnapshot.docs.map(doc => doc.data());
+    return usersList;
 }

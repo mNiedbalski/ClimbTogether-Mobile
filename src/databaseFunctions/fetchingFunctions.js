@@ -214,14 +214,18 @@ export async function getBasicUserInfoFromDB() {
   return fetchedUser;
 }
 async function parseUser(userData) {
-  console.log("userData",userData);
   const rolesDataPromises = userData.roles.map(async (roleRef) => {
     const roleDoc = await getDoc(roleRef);
     const roleData = roleDoc.data();
-    return new Role(roleRef.id, roleData.role_name);
+    console.log("nazwa roli", roleData.role_name)
+    const role = {
+      id: roleRef.id,
+      role_name: roleData.role_name,
+    };
+    return role;
   });
   const rolesDataArray = await Promise.all(rolesDataPromises);
-  console.log("rolesDataArray",rolesDataArray);
+  console.log("rolesDataArray", rolesDataArray);
   /*const achievementsDataPromises = userData.achievements.map(async (achievementRef) => {
     const achievementDoc = await getDoc(achievementRef);
     const achievementData = achievementDoc.data();
@@ -243,6 +247,6 @@ async function parseUser(userData) {
     roles: rolesDataArray,
     //achievements: achievementsDataArray, not needed, but it should be user subcollection
   };
-  console.log("parsedUser",parsedUser);
+  console.log("parsedUser", parsedUser);
   return parsedUser;
 }
