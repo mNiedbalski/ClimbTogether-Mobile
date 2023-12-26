@@ -20,6 +20,31 @@ export async function extractUsersGendersCount() {
     }
     return userGendersCount;  
 }
+export async function extractUsersBMI(){
+    const users = await fetchUsersFromDB();
+    let underweightCount = 0;
+    let normalCount = 0;
+    let overweightCount = 0;
+    let obeseCount = 0;
+    users?.forEach(user => {
+        const bmi = user.weight/((user.height/100)*(user.height/100));
+        if(bmi < 18.5)
+            underweightCount++;
+        else if(bmi < 25)
+            normalCount++;
+        else if(bmi < 30)
+            overweightCount++;
+        else
+            obeseCount++;
+    });
+    const usersBMI = {
+        underweight: underweightCount,
+        normal: normalCount,
+        overweight: overweightCount,
+        obese: obeseCount
+    }
+    return usersBMI;
+}
 export async function extractUsersAgeGroups(){
     const users = await fetchUsersFromDB();
     console.log(users)

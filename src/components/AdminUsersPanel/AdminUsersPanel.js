@@ -5,6 +5,7 @@ import { fetchUsersFromDB } from '../../databaseFunctions/userFunctions';
 import defaultStyles from '../../../AppStyles.style';
 import { UsersGenderDataChart } from '../../StatisticalCharts/UsersGenderChart';
 import { UsersAgeDataChart } from '../../StatisticalCharts/UsersAgeChart';
+import { UsersBMIChart } from '../../StatisticalCharts/UsersBMIChart';
 import { extractUsersGendersCount } from './AdminUsersPanelFunctions';
 const AdminUsersPanel = ({ navigation }) => {
     const [users, setUsers] = useState([]);
@@ -26,7 +27,7 @@ const AdminUsersPanel = ({ navigation }) => {
     }, [genderChartReady]);
     return (
         <Box style={defaultStyles.componentWrapper}>
-            <Box style={defaultStyles.defaultContainer}>
+            <Box style={[defaultStyles.defaultContainer, {width: '100%', marginLeft: '2%'}]}>
                 <Center>
                     <ScrollView>
                         <Column space={7}>
@@ -41,6 +42,12 @@ const AdminUsersPanel = ({ navigation }) => {
                                     Users age data
                                 </Text>
                                 <UsersAgeDataChart/>
+                            </Box>
+                            <Box>
+                                <Text>
+                                    Users BMI data
+                                </Text>
+                                <UsersBMIChart/>
                             </Box>
                         </Column>
                     </ScrollView>
