@@ -22,6 +22,7 @@ export async function extractUsersGendersCount() {
 }
 export async function extractUsersAgeGroups(){
     const users = await fetchUsersFromDB();
+    console.log(users)
     let ageGroups = {
         "1-12": 0,
         "12-17": 0,
@@ -33,7 +34,9 @@ export async function extractUsersAgeGroups(){
         "75+": 0,
     }
     users?.forEach(user => {
-        const age = 16; //calculateAge(user.birthday);
+        const userBirthday = new Date(user.birthday.toDate());
+        const age = calculateAge(userBirthday);
+        console.log("age", age)
         if(age <= 12)
             ageGroups["1-12"]++;
         else if(age <= 17)
@@ -56,10 +59,12 @@ export async function extractUsersAgeGroups(){
 function calculateAge(birthday) {
     const birthDate = new Date(birthday);
     const currentDate = new Date();
+    console.log(birthDate);
     let age = currentDate.getFullYear() - birthDate.getFullYear();
     const monthDiff = currentDate.getMonth() - birthDate.getMonth();
     if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < birthDate.getDate())) {
         age--;
     }
+    console.log(age);
     return age;
 }

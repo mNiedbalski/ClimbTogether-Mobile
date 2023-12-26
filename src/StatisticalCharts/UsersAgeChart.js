@@ -5,16 +5,17 @@ import { extractUsersAgeGroups } from "../components/AdminUsersPanel/AdminUsersP
 
 export const UsersAgeDataChart = () => {
     const [data, setData] = useState([]);
+    const [maxY, setMaxY] = useState(0);
     useEffect(() => {
         const fetchData = async () => {
             const fetchedData = await extractUsersAgeGroups();
             setData(fetchedData);
-
-            console.log(fetchedData);
         }
         fetchData();
-    },[]);
-
+    }, []);
+    useEffect(() => {
+        console.log(data);
+    }, [data]);
     const testData = {
         labels: ["Under 12", "12-17", "18-24", "25-34", "35-44", "45-54", "55-74", "75 or older"],
         datasets: [
@@ -26,7 +27,6 @@ export const UsersAgeDataChart = () => {
     const customChartConfig = {
         ...chartConfig,
         color: (opacity = 1) => `#424242`, // Kolor słupków
-
     };
 
     const marginLeft = -20;
