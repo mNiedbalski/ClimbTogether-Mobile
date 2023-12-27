@@ -49,9 +49,6 @@ export const RouteAttemptsHeatMap = ({ gymID }) => {
             fetchData();
         }
     }, [gymID]);
-    const style = {
-        marginLeft: "5%"
-    };
 
     const customChartConfig = {
         backgroundGradientFrom: "#FDFCEC",
@@ -85,7 +82,6 @@ export const RouteAttemptsHeatMap = ({ gymID }) => {
                 width={chartWidth}
                 height={chartHeight}
                 chartConfig={customChartConfig}
-                style={style}
             />
         )
     }

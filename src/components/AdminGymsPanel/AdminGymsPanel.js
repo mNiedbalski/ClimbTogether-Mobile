@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Text, Box, Row, Column, Center, Select } from 'native-base';
+import { Text, Box, Row, Column, Center, Select, ScrollView } from 'native-base';
 import defaultStyles from '../../../AppStyles.style';
 import recordClimbingStyles from '../SelectRoute/SelectRoute.style';
 import { RouteAttemptsHeatMap } from '../../StatisticalCharts/RouteAttemptsHeatMap';
@@ -21,9 +21,9 @@ const AdminGymPanel = ({ navigation }) => {
     return (
         <Box style={defaultStyles.componentWrapper}>
             <Box style={defaultStyles.defaultContainer}>
-                <Center>
+                <Column>
                     <Text>Attempts frequency</Text>
-                    <Box style={{width: '100%'}}>
+                    <Box style={{ width: '100%' }}>
                         <Select
                             placeholder='Select a gym'
                             selectedValue={selectedGymID}
@@ -42,7 +42,7 @@ const AdminGymPanel = ({ navigation }) => {
                         </Select>
                     </Box>
                     <RouteAttemptsHeatMap gymID={selectedGymID} />
-                </Center>
+                </Column>
             </Box>
         </Box>
     )
