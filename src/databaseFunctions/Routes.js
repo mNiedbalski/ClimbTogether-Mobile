@@ -63,3 +63,59 @@ export async function fetchAttemptsAmountWithDatesAndCorrespondingRouteIDs(gymID
 
     return results;
   }
+  export async function fetchAttemptsAmountWithHours(gymID) {
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+  
+    const gymDoc = await getDoc(doc(db, 'gyms', gymID));
+    const gymData = gymDoc.data();
+  
+    const results = [];
+  
+    const hourIntervals = [
+      { start: 7, end: 10 },
+      { start: 10, end: 13 },
+      { start: 13, end: 16 },
+      { start: 16, end: 19 },
+      { start: 19, end: 22.5 }, // 22:30
+    ];
+  
+    const attemptsCountByHourInterval = {};
+  
+    // Inicjalizacja wartości zerami dla każdego przedziału
+    hourIntervals.forEach((interval) => {
+      const intervalKey = `${interval.start}-${interval.end}`;
+      attemptsCountByHourInterval[intervalKey] = 0;
+    });
+  
+    for (const roomRef of gymData.rooms) {
+      const roomDoc = await getDoc(roomRef);
+      const routesSnapshot = await getDocs(collection(roomDoc.ref, 'routes'));
+  
+      for (const routeDoc of routesSnapshot.docs) {
+        const attemptsSnapshot = await getDocs(
+          query(collection(routeDoc.ref, 'attempts'), where('attempt_time', '>=', threeMonthsAgo))
+        );
+  
+        attemptsSnapshot.forEach((attemptDoc) => {
+          const attemptData = attemptDoc.data();
+          const attemptTime = attemptData.attempt_time.toDate();
+          const attemptHour = attemptTime.getHours();
+  
+          for (const interval of hourIntervals) {
+            if (attemptHour >= interval.start && attemptHour < interval.end) {
+              const intervalKey = `${interval.start}-${interval.end}`;
+              attemptsCountByHourInterval[intervalKey]++;
+              break;
+            }
+          }
+        });
+      }
+    }
+  
+    results.push({
+      attemptsCountByHourInterval: attemptsCountByHourInterval,
+    });
+  
+    return results;
+  }
