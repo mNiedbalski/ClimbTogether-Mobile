@@ -17,7 +17,7 @@ export const MostAttemptedDifficultyChart = ({ gymID }) => {
         fetchData();
     }, []);
     const initialData = {
-        labels: ["Beginner (<V2)", "Intermediate (V3-V6)", "Advanced (V7-V10)", "Professional (V11+)"],
+        labels: ["Beginner (<V2)", "Intermediate (V3-V6)", "Advanced (V7-V10)", "PRO (V11+)"],
         datasets: [
             {
                 data: [chartData["V0_V2"],chartData["V3_V6"],chartData["V7_V10"],chartData["V11_and_above"]]
@@ -43,7 +43,7 @@ export const MostAttemptedDifficultyChart = ({ gymID }) => {
                 width={adjustedWidth}
                 height={chartHeight}
                 chartConfig={barChartConfig}
-                verticalLabelRotation={10} // Zwiększ kąt rotacji etykiet
+                verticalLabelRotation={10} 
             />
         )
 };

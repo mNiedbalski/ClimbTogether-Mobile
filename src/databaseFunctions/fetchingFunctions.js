@@ -54,24 +54,22 @@ export async function findMaxDifficultyRoute() {
   const userAttemptsSnapshot = await getDocs(userAttemptsCollectionRef);
   const userAttemptsIDs = userAttemptsSnapshot.docs.map(doc => doc.id);
 
-  // Pobierz trasy z takimi samymi IDs jak attempts użytkownika
   const routesWithUserAttempts = [];
 
-  // Iteruj przez pomieszczenia
+
   const roomsCollectionRef = collection(db, "rooms");
   const roomsSnapshot = await getDocs(roomsCollectionRef);
 
   for (const roomDoc of roomsSnapshot.docs) {
     const roomID = roomDoc.id;
 
-    // Iteruj przez trasy w pomieszczeniu
     const routesCollectionRef = collection(db, "rooms", roomID, "routes");
     const routesSnapshot = await getDocs(routesCollectionRef);
 
     for (const routeDoc of routesSnapshot.docs) {
       const routeID = routeDoc.id;
 
-      // Iteruj przez attempts w trasie
+
       const attemptsCollectionRef = collection(db, "rooms", roomID, "routes", routeID, "attempts");
 
       for (const attemptID of userAttemptsIDs) {
@@ -85,7 +83,6 @@ export async function findMaxDifficultyRoute() {
     }
   }
 
-  // Znajdź trasę o najwyższym poziomie trudności
   let maxDifficultyRoute = null;
   let maxDifficulty = -1;
 

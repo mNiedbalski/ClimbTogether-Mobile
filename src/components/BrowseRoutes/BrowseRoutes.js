@@ -2,7 +2,7 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { NativeBaseProvider, Text, Box, Row, Column, Center, Button, Select, ScrollView } from 'native-base';
 import defaultStyles from '../../../AppStyles.style';
-import routeSetterPanelStyles from './BrowseRoutes.style';
+import browseRoutesStyles from './BrowseRoutes.style';
 import { fetchGymsFromDB, fetchAllRoutesFromGym, getBasicUserInfoFromDB } from '../../databaseFunctions/fetchingFunctions';
 
 export const checkIfUserCanAddRoute = async (userData) => {
@@ -60,7 +60,7 @@ const BrowseRoutes = ({ navigation }) => {
         <NativeBaseProvider>
             <Box style={defaultStyles.componentWrapper}>
                 <Box style={[defaultStyles.defaultContainer, { height: '85%', marginTop: 0 }]}>
-                    <Box style={routeSetterPanelStyles.panel}>
+                    <Box style={browseRoutesStyles.panel}>
                         <Column>
                             <Center>
                                 <Box style={{ marginTop: '10%', width: '80%' }}>
@@ -83,14 +83,14 @@ const BrowseRoutes = ({ navigation }) => {
                                 </Box>
                             </Center>
                             <Center>
-                                <Box style={routeSetterPanelStyles.scrollView}>
+                                <Box style={browseRoutesStyles.scrollView}>
                                     <ScrollView>
                                         <Column space={3}>
                                             {routes.map((route) => (
-                                                <Box style={routeSetterPanelStyles.scrollViewElement} key={route.id}>
+                                                <Box style={browseRoutesStyles.scrollViewElement} key={route.id}>
                                                     <Box>
                                                         <Button
-                                                            style={routeSetterPanelStyles.routeButton}
+                                                            style={browseRoutesStyles.routeButton}
                                                             onPress={() => navigation.navigate('View Route Info', { routeID: route.id, roomID: route.roomID })}
                                                         >
                                                             <Box>

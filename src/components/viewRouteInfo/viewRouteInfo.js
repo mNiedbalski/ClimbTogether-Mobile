@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NativeBaseProvider, Text, Box, Row, Input, Column, Center, Button, Select, ScrollView } from 'native-base';
 import defaultStyles from '../../../AppStyles.style';
-import routeSetterPanelStyles from '../BrowseRoutes/BrowseRoutes.style'
+import browseRoutesStyles from '../BrowseRoutes/BrowseRoutes.style'
 import { fetchRouteFromDB, getBasicUserInfoFromDB } from '../../databaseFunctions/fetchingFunctions';
 import { handleModify } from './viewRouteInfoFunctions';
 import { checkIfUserCanAddRoute } from '../BrowseRoutes/BrowseRoutes';
@@ -29,7 +29,7 @@ const ViewRouteInfo = ({ route, navigation }) => {
         <NativeBaseProvider>
             <Box style={defaultStyles.componentWrapper}>
                 <Box style={[defaultStyles.defaultContainer, { height: '85%', marginTop: 0 }]}>
-                    <Box style={routeSetterPanelStyles.panel}>
+                    <Box style={browseRoutesStyles.panel}>
                         <Column space={3}>
                             <Box style={{ marginTop: '5%', marginLeft: '5%' }}>
                                 <Text fontSize={20}>Route info...</Text>

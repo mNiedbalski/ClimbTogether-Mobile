@@ -24,7 +24,16 @@ const defaultStyles = StyleSheet.create({
   },
   defaultButton:{
     backgroundColor: '#424242',
-  }
+  },
+  scrollView: {
+    height: '80%',
+    width: '90%',
+    backgroundColor: '#FDFCEC',
+    borderRadius: 20
+  },
+  scrollViewElement: {
+    width: '100%',
+  },
 });
 
 export default defaultStyles;

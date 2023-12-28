@@ -15,9 +15,14 @@ export async function updateUserInDB(postedName, postedSurname, postedHeight, po
     console.log("Document written with ID: ", userRef.id);
 }
 
-export async function fetchUsersFromDB(){
+export async function fetchUsersFromDB() {
     const usersCol = collection(db, 'users');
     const usersSnapshot = await getDocs(usersCol);
-    const usersList = usersSnapshot.docs.map(doc => doc.data());
+    const usersList = usersSnapshot.docs.map(doc => ({
+      name: doc.data().name,
+      surname: doc.data().surname,
+      id: doc.id,
+    }));
+    usersList.sort((a, b) => a.surname.localeCompare(b.surname));
     return usersList;
-}
+  }

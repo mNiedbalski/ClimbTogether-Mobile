@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Text, Box, Row, Column, Center, Select, ScrollView } from 'native-base';
 import defaultStyles from '../../../AppStyles.style';
-import recordClimbingStyles from '../SelectRoute/SelectRoute.style';
 import { RouteAttemptsHeatMap } from '../../StatisticalCharts/RouteAttemptsHeatMap';
 import { MostAttendedHoursChart } from '../../StatisticalCharts/MostAttendedHoursChart';
 import { MostAttemptedDifficultyChart } from '../../StatisticalCharts/MostAttemptedDifficulty';

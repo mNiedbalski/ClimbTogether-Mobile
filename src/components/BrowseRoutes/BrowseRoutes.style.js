@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-const routeSetterPanelStyles = StyleSheet.create({
+const browseRoutesStyles = StyleSheet.create({
   panel: {
     height: '100%',
     width: '100%',
@@ -36,4 +36,4 @@ const routeSetterPanelStyles = StyleSheet.create({
 
 });
 
-export default routeSetterPanelStyles;
+export default browseRoutesStyles;
