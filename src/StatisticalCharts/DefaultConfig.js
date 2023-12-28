@@ -11,3 +11,16 @@ export const chartConfig = {
 };
 export const chartWidth = Dimensions.get('window').width;
 export const chartHeight = Dimensions.get('window').height / 3;
+export const barChartConfig = {
+    ...chartConfig,
+    color: (opacity = 1) => `#424242`, // Kolor słupków
+};
+
+const marginLeft = -20;
+export const adjustedWidth = chartWidth + Math.abs(marginLeft);
+
+export const barChartStyle = {
+    marginVertical: 8,
+    borderRadius: 16,
+    marginLeft: marginLeft,
+};

@@ -1,20 +1,7 @@
 import { auth, db } from '../../App';
 //import { getDoc,getDocs, doc, collection } from 'firebase/firestore/lite'; //Lite version, but I need more powerful queries
 import { getDoc, getDocs, doc, collection, query, where, getCountFromServer } from 'firebase/firestore';
-import { fetchAllRoutesFromGym } from './fetchingFunctions';
-export async function getAttemptsCountFromDatabase(gymID){
-    const routes = await fetchAllRoutesFromGym(gymID);
-   
-    const attemptsDataPromises = routes.map(async route => {
-        const routeDocRef = doc(db, "rooms", route.roomID, "routes", route.id);
-        const routeSnapshot = await getDoc(routeDocRef);
-        const routeData = routeSnapshot.data();
-        console.log("checkedRoute",routeData);
-        return attemptsCount;
-    });
-    const attemptsData = await Promise.all(attemptsDataPromises);
-   
-}
+
 export async function fetchAttemptsAmountWithDatesAndCorrespondingRouteIDs(gymID) {
     const threeMonthsAgo = new Date();
     threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
