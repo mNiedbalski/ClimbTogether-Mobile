@@ -32,6 +32,8 @@ const browseRoutesStyles = StyleSheet.create({
     backgroundColor: '#EEB959',
     width: '80%',
     borderRadius: 10,
+    marginLeft: 'auto',
+    marginRight: 'auto',
   }
 
 });

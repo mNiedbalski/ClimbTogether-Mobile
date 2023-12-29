@@ -170,18 +170,13 @@ export async function fetchAllRoutesFromGym(gymID) {
 
   const gymData = gymSnapshot.data();
   const allRoutes = [];
-
-  // Iteracja przez referencje do rooms w danym gymie
   for (const roomRef of gymData.rooms) {
     const roomID = roomRef.id;
-
-    // Wywołanie funkcji fetchRoutesFromDB dla danego room
     const routesFromRoom = await fetchRoutesFromDB(roomID);
 
-    // Dodanie tras z danego room do ogólnej tablicy
     allRoutes.push(...routesFromRoom);
   }
-
+  //allRoutes.sort((a,b) => a.name.localeCompare(b.name));
   return allRoutes;
 }
 export async function fetchRoutesFromDB(roomID) {
