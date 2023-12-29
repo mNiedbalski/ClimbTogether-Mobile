@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { NativeBaseProvider, Text, Box, Button, Column, Center, Row, Select, ScrollView } from 'native-base';
 import defaultStyles from '../../../AppStyles.style';
-import { fetchUsersFromDB } from '../../databaseFunctions/userFunctions';
+import { fetchUsersNameSurnameIDFromDB } from '../../databaseFunctions/userFunctions';
 const AdminStaffPanel = ({ navigation }) => {
     const [selectedUser, setSelectedUser] = useState('');
     const [isUserSelected, setIsUserSelected] = useState(false);
     const [users, setUsers] = useState([]);
     useEffect(() => {
         const fetchGyms = async () => {
-            const data = await fetchUsersFromDB();
+            const data = await fetchUsersNameSurnameIDFromDB();
             setUsers(data);
         }
         fetchGyms();

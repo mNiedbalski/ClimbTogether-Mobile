@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { NativeBaseProvider, Box, Button, Column, Select, Center, Row, Text, ScrollView, Spinner } from 'native-base';
-import { fetchUsersFromDB } from '../../databaseFunctions/userFunctions';
+import { fetchUsersNameSurnameIDFromDB } from '../../databaseFunctions/userFunctions';
 import defaultStyles from '../../../AppStyles.style';
 import { UsersGenderDataChart } from '../../StatisticalCharts/UsersGenderChart';
 import { UsersAgeDataChart } from '../../StatisticalCharts/UsersAgeChart';
 import { UsersBMIChart } from '../../StatisticalCharts/UsersBMIChart';
-import { extractUsersGendersCount } from './AdminUsersPanelFunctions';
 const AdminUsersPanel = ({ navigation }) => {
     const [users, setUsers] = useState([]);
     const [genderChartReady, setGenderChartReady] = useState(false);
     const fetchUsers = async () => {
-        const users = await fetchUsersFromDB();
+        const users = await fetchUsersNameSurnameIDFromDB();
         setUsers(users);
     }
     const fetchData = () => {

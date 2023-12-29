@@ -1,4 +1,4 @@
-import { fetchUsersFromDB } from '../../databaseFunctions/userFunctions';
+import { fetchUsersFromDB} from '../../databaseFunctions/userFunctions';
 
 export async function extractUsersGendersCount() {
     const users = await fetchUsersFromDB();
@@ -6,6 +6,7 @@ export async function extractUsersGendersCount() {
     let femaleUsersCount = 0;
     let otherUsersCount = 0;
     users?.forEach(user => {
+        console.log(user);
         if (user.sex === "male")
             maleUsersCount++;
         else if (user.sex === "female")
@@ -18,6 +19,7 @@ export async function extractUsersGendersCount() {
         female: femaleUsersCount,
         other: otherUsersCount
     }
+    console.log(userGendersCount)
     return userGendersCount;  
 }
 export async function extractUsersBMI(){
@@ -59,7 +61,7 @@ export async function extractUsersAgeGroups(){
         "75+": 0,
     }
     users?.forEach(user => {
-        const userBirthday = new Date(user.birthday.toDate());
+        const userBirthday = new Date(user?.birthday.toDate());
         const age = calculateAge(userBirthday);
         console.log("age", age)
         if(age <= 12)
