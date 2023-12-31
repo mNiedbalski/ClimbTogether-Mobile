@@ -4,12 +4,12 @@ import { NativeBaseProvider, Text, Box, Row, Column, Center, Button, Select, Scr
 import defaultStyles from '../../../AppStyles.style';
 import browseRoutesStyles from './BrowseRoutes.style';
 import { fetchGymsFromDB, fetchAllRoutesFromGym, getBasicUserInfoFromDB } from '../../databaseFunctions/fetchingFunctions';
-
-export const checkIfUserCanAddRoute = async (userData) => {
+import {AddNewRoute} from '../AddNewRoute/AddNewRoute';
+export const checkIfRouteSetter = async (userData) => {
     console.log("userData", userData);
     if (userData && userData.roles) {
         for (const role of userData.roles) {
-            if (role.role_name === 'routesetter' || role.role_name === 'admin') {
+            if (role.role_name === 'routesetter') {
                 console.log('User has privileges')
                 return true;
             }
@@ -49,7 +49,7 @@ const BrowseRoutes = ({ navigation }) => {
     }, []);
     useEffect(() => {
         const validate = async () => {
-            const privilegesStatus = await checkIfUserCanAddRoute(userInfo);
+            const privilegesStatus = await checkIfRouteSetter(userInfo);
             setPrivilegesGranted(privilegesStatus);
         };
         validate();
@@ -105,7 +105,7 @@ const BrowseRoutes = ({ navigation }) => {
                                 </Box>
                             </Center>
                             <Box>
-                                <Button style={[defaultStyles.defaultButton]}>
+                                <Button onPress={() => navigation.navigate('Add New Route')} style={[defaultStyles.defaultButton]}>
                                     <Text color="red">Add new route</Text>
                                 </Button>
                             </Box>

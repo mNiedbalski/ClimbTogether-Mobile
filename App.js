@@ -16,6 +16,7 @@ import EditProfile from './src/components/EditProfile/EditProfile';
 import AdminGymsPanel from './src/components/AdminGymsPanel/AdminGymsPanel';
 import AdminStaffPanel from './src/components/AdminStaffPanel/AdminStaffPanel';
 import AdminUsersPanel from './src/components/AdminUsersPanel/AdminUsersPanel';
+import AddNewRoute from './src/components/AddNewRoute/AddNewRoute';
 import styles from './AppStyles.style';
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -74,6 +75,7 @@ export function NavigateToDifferentPanels() {
       <Stack.Screen name="Home Page" component={HomePage} />
       <Stack.Screen name="Route Setter Panel" component={BrowseRoutes} />
       <Stack.Screen name="View Route Info" component={ViewRouteInfo} />
+      <Stack.Screen name="Add New Route" component={AddNewRoute} />
     </Stack.Navigator>
   )
 

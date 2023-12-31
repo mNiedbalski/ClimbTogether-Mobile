@@ -4,7 +4,7 @@ import defaultStyles from '../../../AppStyles.style';
 import browseRoutesStyles from '../BrowseRoutes/BrowseRoutes.style'
 import { fetchRouteFromDB, getBasicUserInfoFromDB } from '../../databaseFunctions/fetchingFunctions';
 import { handleModify } from './viewRouteInfoFunctions';
-import { checkIfUserCanAddRoute } from '../BrowseRoutes/BrowseRoutes';
+import { checkIfRouteSetter } from '../BrowseRoutes/BrowseRoutes';
 
 const ViewRouteInfo = ({ route, navigation }) => {
     const [selectedRoomID, setRoomID] = useState(route.params.roomID);
@@ -16,7 +16,7 @@ const ViewRouteInfo = ({ route, navigation }) => {
         const data = await fetchRouteFromDB(selectedRoomID, selectedRouteID);
         const userData = await getBasicUserInfoFromDB();
         setRoute(data);
-        setPrivilegesGranted(checkIfUserCanAddRoute(userData));
+        setPrivilegesGranted(checkIfRouteSetter(userData));
         setRouteName(data.name);
         setRouteDifficulty(data.difficulty);
     };

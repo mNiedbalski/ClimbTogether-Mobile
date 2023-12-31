@@ -2,17 +2,20 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { NativeBaseProvider, Text, Box, Button, Column, Center, Row, Select, ScrollView } from 'native-base';
 import defaultStyles from '../../../AppStyles.style';
 import { fetchUsersNameSurnameIDFromDB } from '../../databaseFunctions/userFunctions';
+import { giveRouteSetterRole, revokeRouteSetterRole } from '../../databaseFunctions/userFunctions';
 const AdminStaffPanel = ({ navigation }) => {
     const [selectedUser, setSelectedUser] = useState('');
     const [isUserSelected, setIsUserSelected] = useState(false);
+    const [doneChanges, setDoneChanges] = useState(false);
     const [users, setUsers] = useState([]);
     useEffect(() => {
-        const fetchGyms = async () => {
+        const fetchUsers = async () => { //It is called at least twice, so it is not a good solution
             const data = await fetchUsersNameSurnameIDFromDB();
             setUsers(data);
+            setDoneChanges(false);
         }
-        fetchGyms();
-    }, []);
+        fetchUsers();
+    }, [doneChanges]);
     useEffect(() => {
         console.log(users);
     }, [users]);
@@ -21,27 +24,32 @@ const AdminStaffPanel = ({ navigation }) => {
             <Box style={[defaultStyles.defaultContainer, { width: '100%' }]}>
                 <Center>
                     <Column>
-                        <ScrollView style={[defaultStyles.scrollView, {backgroundColor: "red"}]}>
+                        <ScrollView style={[defaultStyles.scrollView, {}]}>
                             <Column space={5}>
                                 {users && (
-
                                     users.map((browsedUser) => (
-                                        <Box style={defaultStyles.scrollViewElement} key={browsedUser.id}>
-                                            <Box>
-                                                <Button
-                                                    style={defaultStyles.defaultButton}
-                                                    onPress={() => {
-                                                        setSelectedUser(browsedUser);
-                                                        setIsUserSelected(true);
+                                        browsedUser.isAdmin === false && (
+                                            <Box style={defaultStyles.scrollViewElement} key={browsedUser.id}>
+                                                <Box>
+                                                    <Button
+                                                        style={defaultStyles.defaultButton}
+                                                        onPress={() => {
+                                                            setSelectedUser(browsedUser);
+                                                            setIsUserSelected(true);
 
-                                                    }}
-                                                >
-                                                    <Box>
-                                                        <Text color={"white"} > {browsedUser.surname}, {browsedUser.name}, {browsedUser.id}</Text>
-                                                    </Box>
-                                                </Button>
+                                                        }}
+                                                    >
+                                                        {browsedUser.isRoutesetter === true ? (
+                                                            <Text color={"white"} > {browsedUser.surname}, {browsedUser.name}, {browsedUser.id}</Text>
+                                                        ) :
+                                                            (
+                                                                <Text> {browsedUser.surname}, {browsedUser.name}, {browsedUser.id}</Text>
+                                                            )
+                                                        }
+                                                    </Button>
+                                                </Box>
                                             </Box>
-                                        </Box>
+                                        )
                                     ))
                                 )}
                             </Column>
@@ -56,6 +64,21 @@ const AdminStaffPanel = ({ navigation }) => {
                                             <Text>{selectedUser.surname}</Text>
                                         </Row>
                                         <Text>{selectedUser.id}</Text>
+                                        {selectedUser.isRoutesetter ? (
+                                            <Button onPress={() => {
+                                                revokeRouteSetterRole(selectedUser.id);
+                                                setDoneChanges(true);
+                                            }}>
+                                                <Text>Revoke routesetter role</Text>
+                                            </Button>
+                                        ) : (
+                                            <Button onPress={() => {
+                                                giveRouteSetterRole(selectedUser.id);
+                                                setDoneChanges(true);
+                                            }}>
+                                                <Text>Give routesetter role</Text>
+                                            </Button>
+                                        )}
                                     </Column>
                                 </Box>
                             </Center>
