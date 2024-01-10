@@ -53,39 +53,27 @@ export async function findMaxDifficultyRoute() {
   const userAttemptsCollectionRef = collection(db, "users", auth.currentUser.uid, "attempts");
   const userAttemptsSnapshot = await getDocs(userAttemptsCollectionRef);
   const userAttemptsIDs = userAttemptsSnapshot.docs.map(doc => doc.id);
-
   const routesWithUserAttempts = [];
-
-
   const roomsCollectionRef = collection(db, "rooms");
   const roomsSnapshot = await getDocs(roomsCollectionRef);
-
   for (const roomDoc of roomsSnapshot.docs) {
     const roomID = roomDoc.id;
-
     const routesCollectionRef = collection(db, "rooms", roomID, "routes");
     const routesSnapshot = await getDocs(routesCollectionRef);
-
     for (const routeDoc of routesSnapshot.docs) {
       const routeID = routeDoc.id;
-
-
       const attemptsCollectionRef = collection(db, "rooms", roomID, "routes", routeID, "attempts");
-
       for (const attemptID of userAttemptsIDs) {
         const routeRef = doc(attemptsCollectionRef, attemptID);
         const routeSnapshot = await getDoc(routeRef);
-
         if (routeSnapshot.exists()) {
           routesWithUserAttempts.push(routeDoc.data());
         }
       }
     }
   }
-
   let maxDifficultyRoute = null;
   let maxDifficulty = -1;
-
   for (const route of routesWithUserAttempts) {
     const difficultyValue = extractDifficultyValue(route.difficulty);
 
@@ -94,7 +82,6 @@ export async function findMaxDifficultyRoute() {
       maxDifficultyRoute = route;
     }
   }
-
   return maxDifficultyRoute;
 };
 

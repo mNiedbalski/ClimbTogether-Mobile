@@ -5,15 +5,21 @@ import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 import defaultStyles from '../../../AppStyles.style';
 import { fetchGymsFromDB } from '../../databaseFunctions/fetchingFunctions';
 import { fetchRoomsFromDB } from '../../databaseFunctions/fetchingFunctions';
+import { addRouteToDB } from '../../databaseFunctions/Routes';
+import { auth } from '../../../App';
 
 const AddNewRoute = ({ navigation }) => {
     const [selectedGymID, setGymID] = useState('');
     const [gyms, setGyms] = useState([]);
     const [rooms, setRooms] = useState([]);
     const [selectedRoomID, setRoomID] = useState('');
+    const [selectedGrade, setGrade] = useState('');
+    const [newRouteName, setNewRouteName] = useState('');
     const routeGrades = [];
     for (let i = 1; i <= 17; i++) {
+        routeGrades.push(`V${i}-`);
         routeGrades.push(`V${i}`);
+        routeGrades.push(`V${i}+`);
     }
     useEffect(() => {
         const fetchData = async () => {
@@ -30,11 +36,20 @@ const AddNewRoute = ({ navigation }) => {
     const handleRoomChange = (selectedRoomID) => {
         setRoomID(selectedRoomID);
     };
+    const handleGradeSelect = (selectedGrade) => {
+        setGrade(selectedGrade);
+    }
+    const handleRouteInput = (newRouteName) => {
+        setNewRouteName(newRouteName);
+    }
+    const handleAddRoute = async () => {
+        await addRouteToDB(selectedRoomID, newRouteName, selectedGrade);
+    }
 
     return (
         <Box style={defaultStyles.componentWrapper}>
             <Box style={defaultStyles.defaultContainer}>
-                <Column space={5}>
+                <Column space={8}>
                     <Select
                         placeholder='Select a gym'
                         selectedValue={selectedGymID}
@@ -74,6 +89,8 @@ const AddNewRoute = ({ navigation }) => {
                         <Input
                             placeholder='gym alias+roomLetter+routeNumber'
                             size="md"
+                            value={newRouteName}
+                            onChangeText={handleRouteInput}
                         />
                     </FormControl>
                     <FormControl isRequired>
@@ -81,19 +98,24 @@ const AddNewRoute = ({ navigation }) => {
                         <Select
                             placeholder='Please select route grade...'
                             size="md"
+                            selectedValue={selectedGrade}
+                            onValueChange={handleGradeSelect}
                         >
                             {routeGrades.map((grade) => (
                                 <Select.Item key={grade} label={grade} value={grade} />
                             ))}
                         </Select>
                     </FormControl>
-                    <FormControl isRequired>
-                        <FormControl.Label>Route setter</FormControl.Label>
-                    </FormControl>
+                    <Button style={defaultStyles.defaultButton} onPress={handleAddRoute}>
+                        <Text color="white"> Add route </Text>
+                    </Button>
                 </Column>
-                <Button style={defaultStyles.defaultButton}>
-                    <Text color="white">Go back</Text>
-                </Button>
+               
+                    <Button style={[defaultStyles.defaultButton, {position: 'absolute', width: '100%', bottom: 0}]}>
+                        <Text color="white">Go back</Text>
+                    </Button>
+                
+
             </Box>
         </Box>
     );

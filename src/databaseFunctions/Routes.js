@@ -1,6 +1,6 @@
 import { auth, db } from '../../App';
 //import { getDoc,getDocs, doc, collection } from 'firebase/firestore/lite'; //Lite version, but I need more powerful queries
-import { getDoc, getDocs, doc, collection, query, where, getCountFromServer } from 'firebase/firestore';
+import { getDoc, addDoc, getDocs, doc, collection, query, where, getCountFromServer } from 'firebase/firestore';
 
 export async function fetchAttemptsAmountWithDatesAndCorrespondingRouteIDs(gymID) {
     const threeMonthsAgo = new Date();
@@ -50,7 +50,7 @@ export async function fetchAttemptsAmountWithDatesAndCorrespondingRouteIDs(gymID
 
     return results;
   }
-  export async function fetchAttemptsAmountWithHours(gymID) {
+export async function fetchAttemptsAmountWithHours(gymID) {
     const threeMonthsAgo = new Date();
     threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
   
@@ -105,4 +105,22 @@ export async function fetchAttemptsAmountWithDatesAndCorrespondingRouteIDs(gymID
     });
   
     return results;
+  }
+export async function addRouteToDB(roomID, routeName, routeGrade) {
+    const routesCollRef = collection(db, 'rooms', roomID, 'routes');
+    console.log("routeName",routeName);
+    console.log("routeGrade",routeGrade);
+    //TODO: Reference on user and not just string
+    //console.log("routeSetter",auth.currentUser.uid);
+    const routeInfo = {
+      name: routeName,
+      difficulty: routeGrade,
+      routesetter: "/users/"+auth.currentUser.uid,
+    };
+    try {
+      const newRouteDocRef = await addDoc(routesCollRef, routeInfo);
+      console.log('Added document with ID:', newRouteDocRef.id);
+    } catch(error){
+      console.error('Error adding document:', error);
+    }
   }
