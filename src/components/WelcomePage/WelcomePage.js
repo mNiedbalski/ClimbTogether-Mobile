@@ -41,14 +41,15 @@ const SignInPage = ({ setUserLoggedIn , setUserSignUp, setLoading }) => {
             });
     }
 
+    
     return (
         <NativeBaseProvider>
             <Box style={AppStyles.componentWrapper}>
                 <Box style={AppStyles.defaultContainer}>
                     <Box style={signInPageStyles.logoPlaceholder} >
                         <Image
-                            source={require('../../../assets/logo.png')}
-                            style={{ width: '85%', height: '100%' }}
+                            source={require('../../../assets/ClimbTogether-Logo.png')}
+                            style={{ width: '90%', height: '100%' }}
                         />
                     </Box>
                     {!noAccount ? (

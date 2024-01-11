@@ -108,14 +108,11 @@ export async function fetchAttemptsAmountWithHours(gymID) {
   }
 export async function addRouteToDB(roomID, routeName, routeGrade) {
     const routesCollRef = collection(db, 'rooms', roomID, 'routes');
-    console.log("routeName",routeName);
-    console.log("routeGrade",routeGrade);
-    //TODO: Reference on user and not just string
-    //console.log("routeSetter",auth.currentUser.uid);
+    const routesetterRef = doc(db, 'users', auth.currentUser.uid);
     const routeInfo = {
       name: routeName,
       difficulty: routeGrade,
-      routesetter: "/users/"+auth.currentUser.uid,
+      routesetter: routesetterRef,
     };
     try {
       const newRouteDocRef = await addDoc(routesCollRef, routeInfo);

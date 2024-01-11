@@ -7,7 +7,6 @@ const signInPageStyles = StyleSheet.create({
         marginLeft: 'auto',
         marginRight: 'auto',
         marginTop: '15%',
-        backgroundColor: '#EEB959',
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
