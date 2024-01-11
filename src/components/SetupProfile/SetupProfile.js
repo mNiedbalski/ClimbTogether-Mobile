@@ -102,7 +102,7 @@ const SetupProfile = ({setUserLoggedIn, setLoading}) => {
                             </FormControl>
                             <FormControl isRequired>
                                 <FormControl.Label>Birthday</FormControl.Label>
-                                <Button onPress={showDatePicker}>
+                                <Button onPress={showDatePicker}  style={defaultStyles.defaultButton}>
                                     <Text>Select your birthday</Text>
                                 </Button>
                             </FormControl>

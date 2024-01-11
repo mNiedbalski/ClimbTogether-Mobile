@@ -69,6 +69,7 @@ const SignInPage = ({ setUserLoggedIn , setUserSignUp, setLoading }) => {
                                         value={password}
                                         onChangeText={setPassword}
                                         size="xl"
+                                        secureTextEntry={true}
                                     />
                                 </Box>
 
@@ -107,6 +108,7 @@ const SignInPage = ({ setUserLoggedIn , setUserSignUp, setLoading }) => {
                                         value={password}
                                         onChangeText={setPassword}
                                         size="xl"
+                                        secureTextEntry={true}
                                     />
                                 </Box>
 
