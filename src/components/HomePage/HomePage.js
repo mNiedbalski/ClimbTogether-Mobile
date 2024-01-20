@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { NativeBaseProvider, Text, Box, Row, Column, Center, Button, Spinner } from 'native-base';
+import { NativeBaseProvider, Text, Box, Row, Column, Center, Button, Spinner, Image } from 'native-base';
 import { useFocusEffect } from '@react-navigation/native';
 import homePageStyles from './HomePage.style';
 import defaultStyles from '../../../AppStyles.style';
+import signInPageStyles from '../../../assets/climber-pfp.png';
 import { getBasicUserInfoFromDB, getRoutesCompletedCountFromDB } from '../../databaseFunctions/fetchingFunctions';
 import { parseUserExp } from './HomePageFunctions';
 //TODO: Add loading indicator if data hasnt been loaded yet
@@ -37,20 +38,27 @@ const HomePage = ({ navigation }) => {
                 <Box style={homePageStyles.statsPanel}>
                     {user ? (
                         <Column space={2}>
-                            <Box style={{ marginTop: '5%', height: '45%' }}>
+                            <Box style={{ marginTop: '15%' }}>
                                 <Row>
-                                    <Box style={{ width: '50%' }} />
-                                    <Box>
+                                    <Box style={{ width: '50%' }} >
+                                        <Center>
+                                            <Image
+                                                source={require('../../../assets/climber-pfp.png')}
+                                                size={'xl'}
+                                            />
+                                        </Center>
+                                    </Box>
+                                    <Column>
                                         <Box style={{ marginTop: '15%' }}>
                                             <Text fontSize={20}>{user.name}</Text>
                                         </Box>
                                         <Box>
                                             <Text fontSize={30} bold >{user.surname}</Text>
                                         </Box>
-                                    </Box>
+                                    </Column>
                                 </Row>
                             </Box>
-                            <Box>
+                            <Box style={{marginTop: '25%'}}>
                                 <Row>
                                     <Box style={{ marginLeft: '5%' }}>
                                         <Text fontSize={30} bold>Level</Text>
@@ -72,7 +80,7 @@ const HomePage = ({ navigation }) => {
                                     </Center>
                                 </Box>
                             </Box>
-                            <Row space={8} style={{ marginLeft: '5%', marginTop: '5%' }}>
+                            <Row space={4} style={{ marginLeft: '5%', marginTop: '5%' }}>
                                 <Column>
                                     <Box>
                                         <Text> Attempts finished: </Text>
