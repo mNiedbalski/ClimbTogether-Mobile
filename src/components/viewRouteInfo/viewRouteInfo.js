@@ -36,12 +36,6 @@ const ViewRouteInfo = ({ route, navigation }) => {
                             </Box>
                             {!privilegesGranted ? (
                                 <Box>
-                                    <Text>Route name: {selectedRoute.name}</Text>
-                                    <Text>Difficulty: {selectedRoute.difficulty}</Text>
-                                    <Text>Routesetter: {selectedRoute.routeSetter}</Text>
-                                </Box>
-                            ) : (
-                                <Box>
                                     <Input
                                         placeholder={selectedRoute.name}
                                         value={routeName}
@@ -65,13 +59,19 @@ const ViewRouteInfo = ({ route, navigation }) => {
                                         </Button>
                                     </Box>
                                 </Box>
+                            ) : (
+                                <Column space={3}>
+                                    <Text>Route name: {selectedRoute.name}</Text>
+                                    <Text>Difficulty: {selectedRoute.difficulty}</Text>
+                                    <Text>Routesetter: {selectedRoute.routeSetter}</Text>
+                                </Column>
                             )}
 
                             <Box>
                                 <Button
                                     style={defaultStyles.defaultButton}
                                     onPress={() => navigation.goBack()}>
-                                    <Text>Back</Text>
+                                    <Text color={'white'}>Back</Text>
                                 </Button>
                             </Box>
                         </Column>

@@ -44,7 +44,6 @@ const SetupProfile = ({setUserLoggedIn, setLoading}) => {
 
 
     return (
-        <NativeBaseProvider>
             <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
                 <Box style={defaultStyles.componentWrapper}>
                     <Box style={defaultStyles.defaultContainer}>
@@ -123,7 +122,6 @@ const SetupProfile = ({setUserLoggedIn, setLoading}) => {
                     </Box>
                 </Box>
             </TouchableWithoutFeedback>
-        </NativeBaseProvider>
     );
 };
 

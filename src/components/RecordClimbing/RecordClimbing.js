@@ -3,6 +3,7 @@ import { NativeBaseProvider, Box, Text, Button, Column } from 'native-base';
 import { postAttemptToDB, updateUserExperience, updateUserLevel } from '../../databaseFunctions/postingFunctions';
 import { calculateUserExperienceAndUpdate, updateRouteDifficulty, fetchRoute } from './RecordClimbingFunctions';
 import { fetchRouteFromDB } from '../../databaseFunctions/fetchingFunctions';
+import defaultStyles from '../../../AppStyles.style';
 
 
 const RecordClimbing = ({ route, navigation }) => {
@@ -94,36 +95,46 @@ const RecordClimbing = ({ route, navigation }) => {
   }, [timerStarted, timerStopped]);
 
   return (
-    <NativeBaseProvider>
-      <Box style={{ marginTop: '30%' }}>
-        {!timerStarted && (
-          <Box>
-            <Column space={3}>
-              <Text>Route ID: {routeAttempted.name}</Text>
-              <Text>Difficulty: {routeAttempted.difficulty}</Text>
-              <Text>Routesetter: {routeAttempted.routeSetter} </Text>
-              <Button onPress={startTimer}>Start Timer</Button>
-              <Button onPress={() => navigation.goBack()}>Go back</Button>
-            </Column>
+    <Box style={defaultStyles.componentWrapper}>
+      <Box style={defaultStyles.defaultContainer}>
+        <Box style={{ marginTop: '30%' }}>
+          {!timerStarted && (
+            <Box>
+              <Column space={3}>
+                <Text>Route ID: {routeAttempted.name}</Text>
+                <Text>Difficulty: {routeAttempted.difficulty}</Text>
+                <Text>Routesetter: {routeAttempted.routeSetter} </Text>
+                <Button style={defaultStyles.defaultButton} onPress={startTimer}>Start Timer</Button>
+                <Button style={defaultStyles.defaultButton} onPress={() => navigation.goBack()}>Go back</Button>
+              </Column>
 
-          </Box>
-        )}
-        {timerStarted && !timerStopped && (
-          <Box>
-            <Button onPress={stopTimer}>Stop</Button>
-            <Button onPress={handleZoneReached}>Zone Reached</Button>
-            <Button onPress={handleTopReached}>Top Reached</Button>
-          </Box>
-        )}
-        {topReached && (
-          <Box>
-            <Text>Elapsed Time: {formatTime(elapsedTime)} s</Text>
-            <Button onPress={restartRecording}>Retry</Button>
-            <Button onPress={() => navigation.goBack()}>Go back</Button>
-          </Box>
-        )}
-      </Box>
-    </NativeBaseProvider>
+            </Box>
+          )}
+          {timerStarted && !timerStopped && (
+            <Box style={{ marginTop: '45%' }}>
+              <Column space={3}>
+                <Button size="lg" style={defaultStyles.defaultButton} onPress={stopTimer}>Stop</Button>
+                <Button size="lg" style={defaultStyles.defaultButton} onPress={handleZoneReached}>Zone Reached</Button>
+                <Button size="lg" style={defaultStyles.defaultButton} onPress={handleTopReached}>Top Reached</Button>
+              </Column>
+            </Box>
+
+          )}
+          {topReached && (
+            <Box style={{ marginTop: '45%' }}>
+              <Column space={3}>
+                <Text>Elapsed Time: {formatTime(elapsedTime)} s</Text>
+                <Button size="lg" style={defaultStyles.defaultButton} onPress={restartRecording}>Retry</Button>
+                <Button size="lg" style={defaultStyles.defaultButton} onPress={() => navigation.goBack()}>Go back</Button>
+              </Column>
+            </Box>
+          )}
+        </Box>
+      </Box >
+    </Box>
+
+
+
   );
 };
 

@@ -105,9 +105,13 @@ const BrowseRoutes = ({ navigation }) => {
                                 </Box>
                             </Center>
                             <Box>
-                                <Button onPress={() => navigation.navigate('Add New Route')} style={[defaultStyles.defaultButton]}>
-                                    <Text color="red">Add new route</Text>
-                                </Button>
+                                {privilegedGranted && (
+                                     <Button onPress={() => navigation.navigate('Add New Route')} style={[defaultStyles.defaultButton]}>
+                                     <Text color="red">Add new route</Text>
+                                 </Button>
+                                )
+                            }
+                               
                             </Box>
                         </Column>
                     </Box>
