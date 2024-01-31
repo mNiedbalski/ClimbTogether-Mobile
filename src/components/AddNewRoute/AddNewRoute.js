@@ -52,81 +52,81 @@ const AddNewRoute = ({ navigation }) => {
     return (
         <Box style={defaultStyles.componentWrapper}>
             <Box style={defaultStyles.defaultContainer}>
-                <Column space={8}>
-                    {routeAdded ? (
-                        <Text>Trasa dodana: {newRouteName}, {selectedGrade}</Text>
-                    ) : (
-                        <Box>
-                            <Select
-                                placeholder='Select a gym'
-                                selectedValue={selectedGymID}
-                                onValueChange={handleGymChange}
-                                placeholderTextColor='#424242'
-                                size="md"
-                                bg="#FDFCEC"
-                            >
-                                {gyms ? (
-                                    gyms.map((gym) => (
-                                        <Select.Item label={gym.name} value={gym.id} key={gym.id} />
-                                    ))
-                                ) : (
-                                    <Select.Item label="No gym selected" value={null} />
-                                )}
-                            </Select>
 
-                            <Select
-                                placeholder='Select a room'
-                                selectedValue={selectedRoomID}
-                                onValueChange={handleRoomChange}
-                                placeholderTextColor='#424242'
-                                size="md"
-                                bg="#FDFCEC"
-                            >
-                                {rooms ? (
-                                    rooms.map((room) => (
-                                        <Select.Item label={room.name} value={room.id} key={room.id} />
-                                    ))
-                                ) : (
-                                    <Select.Item label="No room selected" value={null} />
-                                )}
-                            </Select>
+                {routeAdded ? (
+                    <Text>Trasa dodana: {newRouteName}, {selectedGrade}</Text>
+                ) : (
+                    <Column space={8}>
+                        <Select
+                            placeholder='Select a gym'
+                            selectedValue={selectedGymID}
+                            onValueChange={handleGymChange}
+                            placeholderTextColor='#424242'
+                            size="md"
+                            bg="#FDFCEC"
+                        >
+                            {gyms ? (
+                                gyms.map((gym) => (
+                                    <Select.Item label={gym.name} value={gym.id} key={gym.id} />
+                                ))
+                            ) : (
+                                <Select.Item label="No gym selected" value={null} />
+                            )}
+                        </Select>
 
-                            <FormControl isRequired>
-                                <FormControl.Label>Route name</FormControl.Label>
-                                <Input
-                                    placeholder='gym alias+roomLetter+routeNumber'
-                                    size="md"
-                                    value={newRouteName}
-                                    onChangeText={handleRouteInput}
-                                />
-                            </FormControl>
-                            <FormControl isRequired>
-                                <FormControl.Label>Route grade</FormControl.Label>
-                                <Select
-                                    placeholder='Please select route grade...'
-                                    size="md"
-                                    selectedValue={selectedGrade}
-                                    onValueChange={handleGradeSelect}
-                                >
-                                    {routeGrades.map((grade) => (
-                                        <Select.Item key={grade} label={grade} value={grade} />
-                                    ))}
-                                </Select>
-                            </FormControl>
-                            <Button style={defaultStyles.defaultButton} onPress={handleAddRoute}>
-                                <Text color="white"> Add route </Text>
-                            </Button>
-                        </Box>
-                    )}
+                        <Select
+                            placeholder='Select a room'
+                            selectedValue={selectedRoomID}
+                            onValueChange={handleRoomChange}
+                            placeholderTextColor='#424242'
+                            size="md"
+                            bg="#FDFCEC"
+                        >
+                            {rooms ? (
+                                rooms.map((room) => (
+                                    <Select.Item label={room.name} value={room.id} key={room.id} />
+                                ))
+                            ) : (
+                                <Select.Item label="No room selected" value={null} />
+                            )}
+                        </Select>
+
+                        <FormControl isRequired>
+                            <FormControl.Label>Route name</FormControl.Label>
+                            <Input
+                                placeholder='gym alias+roomLetter+routeNumber'
+                                size="md"
+                                value={newRouteName}
+                                onChangeText={handleRouteInput}
+                            />
+                        </FormControl>
+                        <FormControl isRequired>
+                            <FormControl.Label>Route grade</FormControl.Label>
+                            <Select
+                                placeholder='Please select route grade...'
+                                size="md"
+                                selectedValue={selectedGrade}
+                                onValueChange={handleGradeSelect}
+                            >
+                                {routeGrades.map((grade) => (
+                                    <Select.Item key={grade} label={grade} value={grade} />
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <Button style={defaultStyles.defaultButton} onPress={handleAddRoute}>
+                            <Text color="white"> Add route </Text>
+                        </Button>
                     </Column>
+                )}
 
-                    <Button
-                        style={[defaultStyles.defaultButton, {position: 'absolute', width: '100%', bottom: 0}]}
-                        onPress={() => navigation.goBack()}
-                    >
-                        <Text color="white">Go back</Text>
-                    </Button>
-                
+
+                <Button
+                    style={[defaultStyles.defaultButton, { position: 'absolute', width: '100%', bottom: 0 }]}
+                    onPress={() => navigation.goBack()}
+                >
+                    <Text color="white">Go back</Text>
+                </Button>
+
 
             </Box>
         </Box>
