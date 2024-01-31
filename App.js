@@ -189,7 +189,7 @@ export default function App() {
         ) : (
           <SignInPage setUserLoggedIn={setUserLoggedIn} setUserSignUp={setUserSignUp} setLoading={setLoading} />
         )}
-      </NativeBaseProvider>
+       </NativeBaseProvider>
     </NavigationContainer>
   );
 }
