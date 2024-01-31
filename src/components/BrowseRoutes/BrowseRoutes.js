@@ -1,10 +1,11 @@
 
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useReducer, useState, useCallback } from 'react';
 import { NativeBaseProvider, Text, Box, Row, Column, Center, Button, Select, ScrollView } from 'native-base';
+import { useFocusEffect } from '@react-navigation/native';
 import defaultStyles from '../../../AppStyles.style';
 import browseRoutesStyles from './BrowseRoutes.style';
 import { fetchGymsFromDB, fetchAllRoutesFromGym, getBasicUserInfoFromDB } from '../../databaseFunctions/fetchingFunctions';
-import {AddNewRoute} from '../AddNewRoute/AddNewRoute';
+import { AddNewRoute } from '../AddNewRoute/AddNewRoute';
 export const checkIfRouteSetter = async (userData) => {
     console.log("userData", userData);
     if (userData && userData.roles) {
@@ -38,15 +39,17 @@ const BrowseRoutes = ({ navigation }) => {
         const data = await getBasicUserInfoFromDB();
         return data;
     };
-    useEffect(() => {
-        const fetchData = async () => {
-            const userData = await fetchUserData();
-            const gymsData = await fetchGymsFromDB();
-            setUserInfo(userData);
-            setGyms(gymsData);
-        };
-        fetchData();
-    }, []);
+    const fetchData = async () => {
+        const userData = await fetchUserData();
+        const gymsData = await fetchGymsFromDB();
+        setUserInfo(userData);
+        setGyms(gymsData);
+    };
+    useFocusEffect(
+        useCallback(() => {
+            fetchData();
+        }, [])
+    );
     useEffect(() => {
         const validate = async () => {
             const privilegesStatus = await checkIfRouteSetter(userInfo);
@@ -106,12 +109,12 @@ const BrowseRoutes = ({ navigation }) => {
                             </Center>
                             <Box>
                                 {privilegedGranted && (
-                                     <Button onPress={() => navigation.navigate('Add New Route')} style={[defaultStyles.defaultButton]}>
-                                     <Text color="red">Add new route</Text>
-                                 </Button>
+                                    <Button onPress={() => navigation.navigate('Add New Route')} style={[defaultStyles.defaultButton]}>
+                                        <Text color="white">Add new route</Text>
+                                    </Button>
                                 )
-                            }
-                               
+                                }
+
                             </Box>
                         </Column>
                     </Box>

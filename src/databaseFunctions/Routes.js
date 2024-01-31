@@ -1,6 +1,6 @@
 import { auth, db } from '../../App';
 //import { getDoc,getDocs, doc, collection } from 'firebase/firestore/lite'; //Lite version, but I need more powerful queries
-import { getDoc, addDoc, getDocs, doc, collection, query, where, getCountFromServer } from 'firebase/firestore';
+import { getDoc, addDoc, getDocs, doc, collection, query, where, getCountFromServer, deleteDoc } from 'firebase/firestore';
 
 export async function fetchAttemptsAmountWithDatesAndCorrespondingRouteIDs(gymID) {
     const threeMonthsAgo = new Date();
@@ -121,3 +121,12 @@ export async function addRouteToDB(roomID, routeName, routeGrade) {
       console.error('Error adding document:', error);
     }
   }
+export async function deleteRouteFromDB(roomID, routeID) {
+  const routeDocRef = doc(db, 'rooms', roomID, 'routes', routeID);
+  try {
+    await deleteDoc(routeDocRef);
+    console.log('Document successfully deleted!');
+  } catch (error) {
+    console.error('Error deleting document:', error);
+  }
+}

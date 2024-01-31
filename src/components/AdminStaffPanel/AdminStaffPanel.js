@@ -65,18 +65,22 @@ const AdminStaffPanel = ({ navigation }) => {
                                         </Row>
                                         <Text>{selectedUser.id}</Text>
                                         {selectedUser.isRoutesetter ? (
-                                            <Button onPress={() => {
+                                            <Button 
+                                            style={defaultStyles.defaultButton}
+                                            onPress={() => {
                                                 revokeRouteSetterRole(selectedUser.id);
                                                 setDoneChanges(true);
                                             }}>
-                                                <Text>Revoke routesetter role</Text>
+                                                <Text color={"white"}>Revoke routesetter role</Text>
                                             </Button>
                                         ) : (
-                                            <Button onPress={() => {
+                                            <Button 
+                                            style={defaultStyles.defaultButton}
+                                            onPress={() => {
                                                 giveRouteSetterRole(selectedUser.id);
                                                 setDoneChanges(true);
                                             }}>
-                                                <Text>Give routesetter role</Text>
+                                                <Text color={"white"}>Give routesetter role</Text>
                                             </Button>
                                         )}
                                     </Column>

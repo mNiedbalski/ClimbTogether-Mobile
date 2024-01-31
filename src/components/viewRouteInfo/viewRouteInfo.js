@@ -5,12 +5,14 @@ import browseRoutesStyles from '../BrowseRoutes/BrowseRoutes.style'
 import { fetchRouteFromDB, getBasicUserInfoFromDB } from '../../databaseFunctions/fetchingFunctions';
 import { handleModify } from './viewRouteInfoFunctions';
 import { checkIfRouteSetter } from '../BrowseRoutes/BrowseRoutes';
+import { deleteRouteFromDB } from '../../databaseFunctions/Routes';
 
 const ViewRouteInfo = ({ route, navigation }) => {
     const [selectedRoomID, setRoomID] = useState(route.params.roomID);
     const [selectedRouteID, setRouteID] = useState(route.params.routeID);
     const [selectedRoute, setRoute] = useState({});
     const [privilegesGranted, setPrivilegesGranted] = useState(false);
+    const [routeDeleted, setRouteDeleted] = useState(false);
     let [routeName, setRouteName] = useState('');
     fetchData = async () => {
         const data = await fetchRouteFromDB(selectedRoomID, selectedRouteID);
@@ -19,6 +21,10 @@ const ViewRouteInfo = ({ route, navigation }) => {
         setPrivilegesGranted(checkIfRouteSetter(userData));
         setRouteName(data.name);
         setRouteDifficulty(data.difficulty);
+    };
+    handleDelete = async (roomID, routeID) => {
+        setRouteDeleted(true);
+        await deleteRouteFromDB(roomID, routeID);
     };
     useEffect(() => {
         setRoomID(route.params.roomID);
@@ -34,38 +40,54 @@ const ViewRouteInfo = ({ route, navigation }) => {
                             <Box style={{ marginTop: '5%', marginLeft: '5%' }}>
                                 <Text fontSize={20}>Route info...</Text>
                             </Box>
-                            {!privilegesGranted ? (
-                                <Box>
-                                    <Input
-                                        placeholder={selectedRoute.name}
-                                        value={routeName}
-                                        onChangeText={setRouteName}
-                                        size="md"
-                                    />
-                                    <Text>Difficulty: {selectedRoute.difficulty}</Text>
-                                    <Text>Routesetter: {selectedRoute.routeSetter}</Text>
-                                    <Box>
-                                        <Button
-                                            style={defaultStyles.defaultButton}
-                                            onPress={() => handleModify(selectedRouteID, selectedRoomID, routeName)}
-                                        >
-                                            <Text>Modify route</Text>
-                                        </Button>
-                                    </Box>
-                                    <Box>
-                                        <Button
-                                            style={defaultStyles.defaultButton}>
-                                            <Text>Delete route</Text>
-                                        </Button>
-                                    </Box>
-                                </Box>
-                            ) : (
+
+                            {routeDeleted ? (
                                 <Column space={3}>
-                                    <Text>Route name: {selectedRoute.name}</Text>
-                                    <Text>Difficulty: {selectedRoute.difficulty}</Text>
-                                    <Text>Routesetter: {selectedRoute.routeSetter}</Text>
+                                    <Text>Trasa została pomyślnie usunięta.</Text>
+                                    <Button
+                                        style={defaultStyles.defaultButton}
+                                        onPress={() => navigation.goBack()}
+                                    >
+                                        <Text color={'white'}>Back</Text>
+                                    </Button>
                                 </Column>
+                            ) : (
+                                privilegesGranted ? (
+                                    <Column space={3}>
+                                        <Input
+                                            placeholder={selectedRoute.name}
+                                            value={routeName}
+                                            onChangeText={setRouteName}
+                                            size="md"
+                                        />
+                                        <Text>Difficulty: {selectedRoute.difficulty}</Text>
+                                        <Text>Routesetter: {selectedRoute.routeSetter}</Text>
+                                        <Box>
+                                            <Button
+                                                style={defaultStyles.defaultButton}
+                                                onPress={() => handleModify(selectedRouteID, selectedRoomID, routeName)}
+                                            >
+                                                <Text color={'white'}>Modify route</Text>
+                                            </Button>
+                                        </Box>
+                                        <Box>
+                                            <Button
+                                                onPress={() => handleDelete(selectedRoomID, selectedRouteID)}
+                                                style={defaultStyles.defaultButton}
+                                            >
+                                                <Text color={'white'}>Delete route</Text>
+                                            </Button>
+                                        </Box>
+                                    </Column>
+                                ) : (
+                                    <Column space={3}>
+                                        <Text>Route name: {selectedRoute.name}</Text>
+                                        <Text>Difficulty: {selectedRoute.difficulty}</Text>
+                                        <Text>Routesetter: {selectedRoute.routeSetter}</Text>
+                                    </Column>
+                                )
                             )}
+
 
                             <Box>
                                 <Button
