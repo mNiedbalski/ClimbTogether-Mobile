@@ -5,9 +5,12 @@ import { NativeBaseProvider, Box, Text, Input, Button, Image } from 'native-base
 import { auth } from '../../../App'
 import AppStyles from '../../../AppStyles.style';
 import signInPageStyles from './WelcomePage.styles';
-const WelcomePage = ({ setUserLoggedIn , setUserSignUp, setLoading }) => {
+import { Alert } from 'react-native';
+const WelcomePage = ({ setUserLoggedIn, setUserSignUp, setLoading }) => {
     const [email, setEmail] = useState("ghex@gmail.com"); //TEST
     const [password, setPassword] = useState("secretPassword");
+    const [errorMessage, setErrorMessage] = useState(""); // Add state for error message
+
     let [noAccount, setNoAccount] = useState(false);
 
     const handleSignIn = async () => {
@@ -23,6 +26,8 @@ const WelcomePage = ({ setUserLoggedIn , setUserSignUp, setLoading }) => {
                 const errorMessage = error.message;
                 console.log(errorCode);
                 console.log(errorMessage);
+                setErrorMessage("Incorrect email or password"); // Set error message
+                Alert.alert("Error", "Incorrect email or password"); // Show alert for error
             });
     };
     const switchSignInSignUp = () => {
@@ -38,10 +43,11 @@ const WelcomePage = ({ setUserLoggedIn , setUserSignUp, setLoading }) => {
                 const errorMessage = error.message;
                 console.log(errorCode);
                 console.log(errorMessage);
+                setErrorMessage("Error signing up"); // Set error message
+                Alert.alert("Error", "Error signing up"); // Show alert for error
             });
-    }
+    };
 
-    
     return (
         <NativeBaseProvider>
             <Box style={AppStyles.componentWrapper}>
@@ -110,6 +116,9 @@ const WelcomePage = ({ setUserLoggedIn , setUserSignUp, setLoading }) => {
                                         size="xl"
                                         secureTextEntry={true}
                                     />
+                                    {errorMessage !== "" && (
+                                        <Text style={signInPageStyles.errorMessage}>{errorMessage}</Text>
+                                    )}
                                 </Box>
 
                             </Box>
@@ -132,6 +141,7 @@ const WelcomePage = ({ setUserLoggedIn , setUserSignUp, setLoading }) => {
                         </Box>
                     )
                     }
+
                 </Box>
             </Box>
         </NativeBaseProvider>
