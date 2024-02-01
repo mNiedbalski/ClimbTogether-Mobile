@@ -8,8 +8,8 @@ import signInPageStyles from './WelcomePage.styles';
 import { Alert } from 'react-native';
 
 const WelcomePage = ({ setUserLoggedIn, setUserSignUp, setLoading }) => {
-    const [email, setEmail] = useState("ghex@gmail.com"); //TEST
-    const [password, setPassword] = useState("secretPassword");
+    const [email, setEmail] = useState(""); //TEST
+    const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState(""); // Add state for error message
     const [forgotPassword, setForgotPassword] = useState(false);
     const [resetEmail, setResetEmail] = useState("");
