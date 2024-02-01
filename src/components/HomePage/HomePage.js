@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { signOut } from 'firebase/auth';
 import { NativeBaseProvider, Text, Box, Row, Column, Center, Button, Spinner, Image, Icon, Pressable } from 'native-base';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, CommonActions } from '@react-navigation/native';
 import homePageStyles from './HomePage.style';
 import defaultStyles from '../../../AppStyles.style';
 import signInPageStyles from '../../../assets/climber-pfp.png';
@@ -38,9 +38,10 @@ const HomePage = ({ navigation, setUserLoggedIn }) => {
     const handleLogout = () => {
             signOut(auth).then(() => {
                     // Sign-out successful.
-                    setUserLoggedIn(false);
+                    console.log("Signed out");
                 }).catch((error) => {
                     // An error happened.
+                    console.log(error);
                 });
     };
 

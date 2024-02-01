@@ -9,7 +9,7 @@ import HomePage from './src/components/HomePage/HomePage';
 import SelectRoute from './src/components/SelectRoute/SelectRoute';
 import Settings from './src/components/Settings/Settings';
 import RecordClimbing from './src/components/RecordClimbing/RecordClimbing';
-import SignInPage from './src/components/WelcomePage/WelcomePage';
+import WelcomePage from './src/components/WelcomePage/WelcomePage';
 import BrowseRoutes from './src/components/BrowseRoutes/BrowseRoutes';
 import ViewRouteInfo from './src/components/viewRouteInfo/viewRouteInfo';
 import EditProfile from './src/components/EditProfile/EditProfile';
@@ -21,7 +21,7 @@ import styles from './AppStyles.style';
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 
@@ -53,42 +53,53 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth();
 
-export function NavigateToRouteRecording() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="Select Route" component={SelectRoute} />
-      <Stack.Screen name="Record Climbing" component={RecordClimbing} />
-    </Stack.Navigator>
-  )
-}
-export function NavigateToDifferentPanels() {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="Home Page" component={HomePage} />
-      <Stack.Screen name="Route Setter Panel" component={BrowseRoutes} />
-      <Stack.Screen name="View Route Info" component={ViewRouteInfo} />
-      <Stack.Screen name="Add New Route" component={AddNewRoute} />
-      <Stack.Screen name="Welcome Page" component={SignInPage} />
-    </Stack.Navigator>
-  )
-
-}
-
 export default function App() {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [userSignUp, setUserSignUp] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("user is logged in");
+      setUserLoggedIn(true);
+    } else {
+      console.log("user is not logged in");
+      setUserLoggedIn(false);
+    }
+  });
 
+  
+  useEffect(() => {
+    console.log("userLoggedIn", userLoggedIn);
+  }, [userLoggedIn]);
+  function NavigateToRouteRecording() {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="Select Route" component={SelectRoute} />
+        <Stack.Screen name="Record Climbing" component={RecordClimbing} />
+      </Stack.Navigator>
+    )
+  }
+  function NavigateToDifferentPanels(setUserLoggedIn) {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="Home Page" component={() => <HomePage setUserLoggedIn={setUserLoggedIn}/>} />
+        <Stack.Screen name="Route Setter Panel" component={BrowseRoutes} />
+        <Stack.Screen name="View Route Info" component={ViewRouteInfo} />
+        <Stack.Screen name="Add New Route" component={AddNewRoute} />
+      </Stack.Navigator>
+    )
+  
+  }
   const fetchData = async () => {
     if (auth.currentUser.uid) {
       const isUserAdmin = await checkIfAdmin();
@@ -188,7 +199,7 @@ export default function App() {
         ) : userSignUp ? (
           <SetupProfile setUserLoggedIn={setUserLoggedIn} setLoading={setLoading} />
         ) : (
-          <SignInPage setUserLoggedIn={setUserLoggedIn} setUserSignUp={setUserSignUp} setLoading={setLoading} />
+          <WelcomePage setUserLoggedIn={setUserLoggedIn} setUserSignUp={setUserSignUp} setLoading={setLoading} />
         )}
        </NativeBaseProvider>
     </NavigationContainer>

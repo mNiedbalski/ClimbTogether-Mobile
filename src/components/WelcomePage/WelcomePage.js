@@ -5,7 +5,7 @@ import { NativeBaseProvider, Box, Text, Input, Button, Image } from 'native-base
 import { auth } from '../../../App'
 import AppStyles from '../../../AppStyles.style';
 import signInPageStyles from './WelcomePage.styles';
-const SignInPage = ({ setUserLoggedIn , setUserSignUp, setLoading }) => {
+const WelcomePage = ({ setUserLoggedIn , setUserSignUp, setLoading }) => {
     const [email, setEmail] = useState("ghex@gmail.com"); //TEST
     const [password, setPassword] = useState("secretPassword");
     let [noAccount, setNoAccount] = useState(false);
@@ -139,4 +139,4 @@ const SignInPage = ({ setUserLoggedIn , setUserSignUp, setLoading }) => {
 };
 
 
-export default SignInPage;
+export default WelcomePage;
