@@ -76,6 +76,7 @@ export function NavigateToDifferentPanels() {
       <Stack.Screen name="Route Setter Panel" component={BrowseRoutes} />
       <Stack.Screen name="View Route Info" component={ViewRouteInfo} />
       <Stack.Screen name="Add New Route" component={AddNewRoute} />
+      <Stack.Screen name="Welcome Page" component={SignInPage} />
     </Stack.Navigator>
   )
 
@@ -176,7 +177,7 @@ export default function App() {
             />
             <Tab.Screen
               name="Navigate To Different Panels"
-              component={NavigateToDifferentPanels}
+              component={() => <NavigateToDifferentPanels setUserLoggedIn={setUserLoggedIn} />}
               options={{
                 tabBarIcon: ({ focused }) => (
                   <Entypo name="home" size={50} color='#424242' />

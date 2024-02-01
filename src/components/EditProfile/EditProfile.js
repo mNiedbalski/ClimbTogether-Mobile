@@ -106,7 +106,7 @@ const EditProfile = ({ navigation }) => {
                                 <FormControl>
                                     <FormControl.Label>Birthday</FormControl.Label>
                                     <Button onPress={showDatePicker} style={defaultStyles.defaultButton}>
-                                        <Text>{birthday?.toDateString()}</Text>
+                                    <Text color={"white"}>{birthday?.toDateString()}</Text>
                                     </Button>
                                 </FormControl>
                                 <DateTimePickerModal
@@ -118,7 +118,7 @@ const EditProfile = ({ navigation }) => {
                                 />
                                 <Box style={{ marginTop: '10%' }}>
                                     <Button onPress={handleSaveChanges} style={defaultStyles.defaultButton}>
-                                        <Text>Save Changes</Text>
+                                    <Text color={"white"}>Save Changes</Text>
                                     </Button>
                                 </Box>
 

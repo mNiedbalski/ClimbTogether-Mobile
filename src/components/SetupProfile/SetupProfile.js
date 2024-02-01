@@ -102,7 +102,7 @@ const SetupProfile = ({setUserLoggedIn, setLoading}) => {
                             <FormControl isRequired>
                                 <FormControl.Label>Birthday</FormControl.Label>
                                 <Button onPress={showDatePicker}  style={defaultStyles.defaultButton}>
-                                    <Text>Select your birthday</Text>
+                                    <Text color={"white"}>Select your birthday</Text>
                                 </Button>
                             </FormControl>
                             <DateTimePickerModal
@@ -114,7 +114,7 @@ const SetupProfile = ({setUserLoggedIn, setLoading}) => {
                             />
                             <Box style={{ marginTop: '10%' }}>
                                 <Button onPress={handleSaveProfile} isDisabled={!isFormValid} style={defaultStyles.defaultButton}>
-                                    <Text>Save Profile</Text>
+                                <Text color={"white"}>Save Profile</Text>
                                 </Button>
                             </Box>
 
