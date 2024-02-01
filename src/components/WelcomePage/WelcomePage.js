@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TextInput } from 'react-native';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import { NativeBaseProvider, Box, Text, Input, Button, Image } from 'native-base';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
+import { NativeBaseProvider, Box, Text, Input, Button, Image, Column } from 'native-base';
 import { auth } from '../../../App'
 import AppStyles from '../../../AppStyles.style';
 import signInPageStyles from './WelcomePage.styles';
 import { Alert } from 'react-native';
+
 const WelcomePage = ({ setUserLoggedIn, setUserSignUp, setLoading }) => {
     const [email, setEmail] = useState("ghex@gmail.com"); //TEST
     const [password, setPassword] = useState("secretPassword");
     const [errorMessage, setErrorMessage] = useState(""); // Add state for error message
+    const [forgotPassword, setForgotPassword] = useState(false);
+    const [resetEmail, setResetEmail] = useState("");
 
     let [noAccount, setNoAccount] = useState(false);
 
@@ -30,9 +33,11 @@ const WelcomePage = ({ setUserLoggedIn, setUserSignUp, setLoading }) => {
                 Alert.alert("Error", "Incorrect email or password"); // Show alert for error
             });
     };
+
     const switchSignInSignUp = () => {
         setNoAccount((prevNoAccount) => !prevNoAccount);
     };
+
     const handleSignUp = async () => {
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
@@ -47,6 +52,21 @@ const WelcomePage = ({ setUserLoggedIn, setUserSignUp, setLoading }) => {
                 Alert.alert("Error", "Error signing up"); // Show alert for error
             });
     };
+    const handleForgotPassword = async () => {
+        sendPasswordResetEmail(auth, resetEmail)
+            .then(() => {
+                Alert.alert("Email sent", "Check your email for password reset instructions in a few minutes. If you don't receive an email, please check your spam folder.");
+                setForgotPassword(false);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode);
+                console.log(errorMessage);
+                setErrorMessage("Error sending email"); // Set error message
+                Alert.alert("Error", "Error sending email"); // Show alert for error
+            });
+    };
 
     return (
         <NativeBaseProvider>
@@ -58,7 +78,27 @@ const WelcomePage = ({ setUserLoggedIn, setUserSignUp, setLoading }) => {
                             style={{ width: '90%', height: '100%' }}
                         />
                     </Box>
-                    {!noAccount ? (
+                    {forgotPassword ? (
+                        <Column space={5}>
+                            <Box style={signInPageStyles.inputFieldStyle}>
+                                <Input
+                                    placeholder="Email"
+                                    value={resetEmail}
+                                    onChangeText={setResetEmail}
+                                    size="xl"
+                                />
+                            </Box>
+                            <Button style={AppStyles.defaultButton}
+                                onPress={handleForgotPassword}>
+                                Send Email
+                            </Button>
+                            <Button style={AppStyles.defaultButton}
+                                onPress={() => setForgotPassword(false)}>
+                                Go back
+                            </Button>
+
+                        </Column>
+                    ) : !noAccount ? (
                         <Box style={{ height: '62.5%' }}>
                             <Box style={signInPageStyles.inputFieldsContainer}>
                                 <Box style={signInPageStyles.inputFieldStyle}>
@@ -78,7 +118,6 @@ const WelcomePage = ({ setUserLoggedIn, setUserSignUp, setLoading }) => {
                                         secureTextEntry={true}
                                     />
                                 </Box>
-
                             </Box>
                             <Box style={signInPageStyles.buttonsSectionContainer}>
                                 <Box>
@@ -94,7 +133,12 @@ const WelcomePage = ({ setUserLoggedIn, setUserSignUp, setLoading }) => {
                                         No account?
                                     </Button>
                                 </Box>
-
+                                <Box style={{ marginTop: '5%' }}>
+                                    <Button style={AppStyles.defaultButton}
+                                        onPress={() => setForgotPassword(true)}>
+                                        Forgot password?
+                                    </Button>
+                                </Box>
                             </Box>
                         </Box>
                     ) : (
@@ -120,7 +164,6 @@ const WelcomePage = ({ setUserLoggedIn, setUserSignUp, setLoading }) => {
                                         <Text style={signInPageStyles.errorMessage}>{errorMessage}</Text>
                                     )}
                                 </Box>
-
                             </Box>
                             <Box style={signInPageStyles.buttonsSectionContainer}>
                                 <Box>
@@ -136,17 +179,14 @@ const WelcomePage = ({ setUserLoggedIn, setUserSignUp, setLoading }) => {
                                         Go back
                                     </Button>
                                 </Box>
-
                             </Box>
                         </Box>
-                    )
-                    }
+                    )}
 
                 </Box>
             </Box>
         </NativeBaseProvider>
     );
 };
-
 
 export default WelcomePage;
