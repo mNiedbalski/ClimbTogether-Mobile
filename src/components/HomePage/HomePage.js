@@ -11,7 +11,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { auth } from '../../../App'
 //TODO: Add loading indicator if data hasnt been loaded yet
 //TODO: Add user profile pictures
-const HomePage = ({ navigation, setUserLoggedIn }) => {
+const HomePage = ({ navigation }) => {
     const [user, setUser] = useState({});
     const [attemptsFinished, setAttemptsFinished] = useState(0);
     const fetchAttemptsInfo = async () => {
