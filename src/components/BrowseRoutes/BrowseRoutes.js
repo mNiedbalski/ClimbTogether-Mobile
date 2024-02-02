@@ -87,7 +87,7 @@ const BrowseRoutes = ({ navigation }) => {
                             </Center>
                             <Center>
                                 <Box style={browseRoutesStyles.scrollView}>
-                                    <ScrollView>
+                                    <ScrollView style={{marginTop: "10%"}}>
                                         <Column space={3}>
                                             {routes.map((route) => (
                                                 <Box style={browseRoutesStyles.scrollViewElement} key={route.id}>
@@ -110,7 +110,7 @@ const BrowseRoutes = ({ navigation }) => {
                             <Box>
                                 {privilegedGranted && (
                                     <Center>
-                                        <Button onPress={() => navigation.navigate('Add New Route')} style={[defaultStyles.defaultButton, { width: '80%' }]}>
+                                        <Button onPress={() => navigation.navigate('Add New Route')} style={[defaultStyles.defaultButton, { width: '80%', bottom:'8%' }]}>
                                             <Text color="white">Add new route</Text>
                                         </Button>
                                     </Center>
