@@ -60,14 +60,13 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log("user is logged in");
-      setUserLoggedIn(true);
-    } else {
+    if (!user) {
       console.log("user is not logged in");
       setUserLoggedIn(false);
+      setUserSignUp(false);
     }
   });
+
 
   
   useEffect(() => {
@@ -111,6 +110,12 @@ export default function App() {
   useEffect(() => {
     fetchData();
   }, [userLoggedIn]);
+
+  useEffect(() => {
+    if (userLoggedIn && !userSignUp) {
+      setUserSignUp(true);
+    }
+  }, [userLoggedIn, userSignUp]);
 
   return (
     <NavigationContainer>
@@ -197,7 +202,7 @@ export default function App() {
             />
           </Tab.Navigator>
         ) : userSignUp ? (
-          <SetupProfile setUserLoggedIn={setUserLoggedIn} setLoading={setLoading} />
+          <SetupProfile setUserLoggedIn={setUserLoggedIn} setLoading={setLoading} setUserSignUp={setUserSignUp}/>
         ) : (
           <WelcomePage setUserLoggedIn={setUserLoggedIn} setUserSignUp={setUserSignUp} setLoading={setLoading} />
         )}

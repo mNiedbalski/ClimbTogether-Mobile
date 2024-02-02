@@ -4,7 +4,7 @@ import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import defaultStyles from '../../../AppStyles.style';
 import { postNewUserToDatabase } from '../../databaseFunctions/postingFunctions';
-const SetupProfile = ({setUserLoggedIn, setLoading}) => {
+const SetupProfile = ({setUserLoggedIn, setUserSignUp, setLoading}) => {
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [height, setHeight] = useState();
@@ -27,6 +27,7 @@ const SetupProfile = ({setUserLoggedIn, setLoading}) => {
     const handleSaveProfile = async () => {
         await postNewUserToDatabase(name,surname,height,weight,sex,birthday);
         setUserLoggedIn(true);
+        setUserSignUp(false);
         setLoading(true);
     };
     useEffect(() => {

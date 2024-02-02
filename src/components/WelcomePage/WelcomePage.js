@@ -42,6 +42,7 @@ const WelcomePage = ({ setUserLoggedIn, setUserSignUp, setLoading }) => {
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 setUserSignUp(true);
+                console.log("User signed up");
             })
             .catch((error) => {
                 const errorCode = error.code;
