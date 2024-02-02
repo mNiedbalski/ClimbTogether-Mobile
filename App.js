@@ -66,8 +66,6 @@ export default function App() {
       setUserSignUp(false);
     }
   });
-
-
   
   useEffect(() => {
     console.log("userLoggedIn", userLoggedIn);

@@ -7,11 +7,21 @@ import { UsersGenderDataChart } from '../../StatisticalCharts/UsersGenderChart';
 import { UsersAgeDataChart } from '../../StatisticalCharts/UsersAgeChart';
 import { UsersBMIChart } from '../../StatisticalCharts/UsersBMIChart';
 import { AntDesign } from '@expo/vector-icons';
-import {auth} from '../../../App';
+import { auth } from '../../../App';
 import { signOut } from 'firebase/auth';
 const AdminUsersPanel = ({ navigation }) => {
     const [users, setUsers] = useState([]);
     const [genderChartReady, setGenderChartReady] = useState(false);
+    const handleLogout = () => {
+        console.log("zmitac");
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            console.log("Signed out");
+        }).catch((error) => {
+            // An error happened.
+            console.log(error);
+        });
+    };
     const fetchUsers = async () => {
         const users = await fetchUsersNameSurnameIDFromDB();
         setUsers(users);
@@ -27,20 +37,12 @@ const AdminUsersPanel = ({ navigation }) => {
     useEffect(() => {
         console.log("genderChart", genderChartReady);
     }, [genderChartReady]);
-    const handleLogout = () => {
-        signOut(auth).then(() => {
-            // Sign-out successful.
-            console.log("Signed out");
-        }).catch((error) => {
-            // An error happened.
-            console.log(error);
-        });
-    };
+
     return (
         <Box style={defaultStyles.componentWrapper}>
             <Box style={[defaultStyles.defaultContainer, { width: '100%', marginLeft: '2%' }]}>
                 <Center>
-                    <Pressable onPress={handleLogout} style={{ position: 'absolute', right: '0%', top: '0%' }}>
+                    <Pressable onPress={handleLogout} style={{ position: 'absolute', right: '0%', top: '0%', zIndex: 1 }}>
                         <Row>
                             <Box style={{ marginRight: "10%", marginTop: "3%" }}>
                                 <Text>
