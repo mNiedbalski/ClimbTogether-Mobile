@@ -2,6 +2,7 @@ import { auth, db } from '../../App';
 //import { getDoc,getDocs, doc, collection } from 'firebase/firestore/lite'; //Lite version, but I need more powerful queries
 import { getDoc, addDoc, getDocs, doc, collection, query, where, getCountFromServer, deleteDoc } from 'firebase/firestore';
 
+
 export async function fetchAttemptsAmountWithDatesAndCorrespondingRouteIDs(gymID) {
     const threeMonthsAgo = new Date();
     threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);

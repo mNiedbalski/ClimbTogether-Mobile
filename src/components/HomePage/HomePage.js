@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { signOut } from 'firebase/auth';
-import { NativeBaseProvider, Text, Box, Row, Column, Center, Button, Spinner, Image, Icon, Pressable } from 'native-base';
+import { NativeBaseProvider, Text, Box, Row, Column, Center, Button, Spinner, Image, Icon, Pressable, Link } from 'native-base';
 import { useFocusEffect, CommonActions } from '@react-navigation/native';
 import homePageStyles from './HomePage.style';
 import defaultStyles from '../../../AppStyles.style';
@@ -8,9 +8,13 @@ import signInPageStyles from '../../../assets/climber-pfp.png';
 import { getBasicUserInfoFromDB, getRoutesCompletedCountFromDB } from '../../databaseFunctions/fetchingFunctions';
 import { parseUserExp } from './HomePageFunctions';
 import { AntDesign } from '@expo/vector-icons';
-import { auth } from '../../../App'
+import { auth, db } from '../../../App'
+import { Alert } from 'react-native';
 //TODO: Add loading indicator if data hasnt been loaded yet
 //TODO: Add user profile pictures
+
+import { doc, collection, set, addDoc } from 'firebase/firestore';
+
 const HomePage = ({ navigation }) => {
     const [user, setUser] = useState({});
     const [attemptsFinished, setAttemptsFinished] = useState(0);
@@ -34,15 +38,20 @@ const HomePage = ({ navigation }) => {
     useEffect(() => {
         console.log(user);
     }, [user]);
+    
+    const handleLogoInfo = () => {
+        Alert.alert("Logo info", "Climbing icons created by Leremy - Flaticon");
+    }
+    
 
     const handleLogout = () => {
-            signOut(auth).then(() => {
-                    // Sign-out successful.
-                    console.log("Signed out");
-                }).catch((error) => {
-                    // An error happened.
-                    console.log(error);
-                });
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            console.log("Signed out");
+        }).catch((error) => {
+            // An error happened.
+            console.log(error);
+        });
     };
 
     return (
@@ -71,6 +80,9 @@ const HomePage = ({ navigation }) => {
                                                 source={require('../../../assets/climber-pfp.png')}
                                                 size={'xl'}
                                             />
+                                            <Pressable onPress={handleLogoInfo} style={{ left: "30%" }}>
+                                                <AntDesign name="infocirlceo" size={10} color="black" />
+                                            </Pressable>
                                         </Center>
                                     </Box>
                                     <Column>
@@ -139,6 +151,9 @@ const HomePage = ({ navigation }) => {
                         onPress={() => navigation.navigate('Route Setter Panel')}
                     >Browse Routes</Button>
                 </Center>
+                {/* <Button onPress={addTestRoutes}>
+                    Add some data
+                </Button> */}
 
             </Box>
 

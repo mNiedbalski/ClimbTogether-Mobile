@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { View, TextInput } from 'react-native';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
-import { NativeBaseProvider, Box, Text, Input, Button, Image, Column } from 'native-base';
+import { NativeBaseProvider, Box, Text, Input, Button, Image, Column, Center, Icon, Pressable } from 'native-base';
 import { auth } from '../../../App'
 import AppStyles from '../../../AppStyles.style';
 import signInPageStyles from './WelcomePage.styles';
 import { Alert } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 
 const WelcomePage = ({ setUserLoggedIn, setUserSignUp, setLoading }) => {
-    const [email, setEmail] = useState("ghex@gmail.com"); //TEST
-    const [password, setPassword] = useState("secretPassword");
-    const [errorMessage, setErrorMessage] = useState(""); // Add state for error message
+    const [email, setEmail] = useState(""); 
+    const [password, setPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState(""); 
     const [forgotPassword, setForgotPassword] = useState(false);
     const [resetEmail, setResetEmail] = useState("");
 
@@ -53,6 +54,9 @@ const WelcomePage = ({ setUserLoggedIn, setUserSignUp, setLoading }) => {
                 Alert.alert("Error", "Error signing up"); // Show alert for error
             });
     };
+    const handleLogoInfo = () => {
+        Alert.alert("Logo info", "Logo made by Streamline, licensed under CC BY 4.0");
+    }
     const handleForgotPassword = async () => {
         sendPasswordResetEmail(auth, resetEmail)
             .then(() => {
@@ -72,13 +76,20 @@ const WelcomePage = ({ setUserLoggedIn, setUserSignUp, setLoading }) => {
     return (
         <NativeBaseProvider>
             <Box style={AppStyles.componentWrapper}>
+
                 <Box style={AppStyles.defaultContainer}>
+
                     <Box style={signInPageStyles.logoPlaceholder} >
+
+
                         <Image
                             source={require('../../../assets/ClimbTogether-Logo.png')}
                             style={{ width: '90%', height: '100%' }}
                         />
                     </Box>
+                    <Pressable onPress={handleLogoInfo} style={{ left: "90%"}}>
+                        <AntDesign name="infocirlceo" size={10} color="black" />
+                    </Pressable>
                     {forgotPassword ? (
                         <Column space={5}>
                             <Box style={signInPageStyles.inputFieldStyle}>
