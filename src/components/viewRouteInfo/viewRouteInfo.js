@@ -44,12 +44,6 @@ const ViewRouteInfo = ({ route, navigation }) => {
                             {routeDeleted ? (
                                 <Column space={3}>
                                     <Text>Trasa została pomyślnie usunięta.</Text>
-                                    <Button
-                                        style={defaultStyles.defaultButton}
-                                        onPress={() => navigation.goBack()}
-                                    >
-                                        <Text color={'white'}>Back</Text>
-                                    </Button>
                                 </Column>
                             ) : (
                                 privilegesGranted ? (
